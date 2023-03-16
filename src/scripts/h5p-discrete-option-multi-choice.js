@@ -21,7 +21,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         enableSolutionsButton: false, // @see {@link https://h5p.org/documentation/developers/contracts#guides-header-8}
         enableCheckButton: false, // Undocumented in contract, but required for Question Set
         mode: 'standard',
-        showResults: true,
+        showResults: false,
         randomAnswers: true,
         singlePoint: false
       },
@@ -30,7 +30,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
     // Ensure values match what discrete option multiple choice is for
     if (this.params.behaviour.mode === 'standard') {
-      this.params.behaviour.showResults = false;
       this.params.behaviour.randomAnswers = true;
       this.params.behaviour.singlePoint = true;
     }
@@ -215,11 +214,10 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       ariaMessage
     );
 
-    if (
-      this.params.behaviour.showResults &&
-      this.params.behaviour.mode !== 'standard'
-    ) {
-      this.content.showResults();
+    if (this.params.behaviour.showResults) {
+      this.content.showResults(
+        { showScores: this.params.behaviour.mode === 'allOptions' }
+      );
     }
   }
 

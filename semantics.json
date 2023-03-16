@@ -259,19 +259,7 @@
         "label": "Show results",
         "importance": "low",
         "description": "Enable to show the results once the user has checked all options that were presented.",
-        "default": true,
-        "widget": "showWhen",
-        "showWhen": {
-          "rules": [
-            {
-              "field": "mode",
-              "equals": [
-                "allOptions",
-                "allOptionsWeighted"
-              ]
-            }
-          ]
-        }
+        "default": false
       },
       {
         "name": "singlePoint",

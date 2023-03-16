@@ -73,7 +73,7 @@ export default class Option {
    * Mark answer.
    *
    * @param {boolean|null} correct True: correct. False: incorrect. Null: reset.
-   * @param {HTMLElement} [scorePoints] Score points.
+   * @param {HTMLElement|undefined} [scorePoints] Score points.
    */
   markAnswer(correct, scorePoints) {
     if (typeof correct !== 'boolean' && correct !== null) {

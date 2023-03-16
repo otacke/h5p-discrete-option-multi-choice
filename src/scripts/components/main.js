@@ -106,10 +106,14 @@ export default class Main {
 
   /**
    * Show results.
+   *
+   * @param {object} [params={}] Parameters.
    */
-  showResults() {
+  showResults(params = {}) {
     this.scorePoints = this.scorePoints || new H5P.Question.ScorePoints();
-    this.panelList.showResults(this.scorePoints);
+    this.panelList.showResults(
+      params.showScores ? this.scorePoints : null
+    );
   }
 
   /**
