@@ -1,5 +1,3 @@
-import './feedback.scss';
-
 /**
  * Feedback button.
  */

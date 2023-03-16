@@ -1,7 +1,6 @@
 import Globals from '@services/globals';
 import Util from '@services/util';
 import PanelList from '@components/panel-list/panel-list';
-import './main.scss';
 
 /**
  * Main DOM component incl. main controller.
