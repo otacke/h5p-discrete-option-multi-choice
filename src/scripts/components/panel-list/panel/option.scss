@@ -1,0 +1,19 @@
+.h5p-discrete-option-multi-choice-option {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  width: 100%;
+
+  .h5p-discrete-option-multi-choice-option-text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  .h5p-discrete-option-multi-choice-choices {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem
+  }
+}
