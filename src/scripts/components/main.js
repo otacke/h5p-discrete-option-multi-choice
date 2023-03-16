@@ -51,10 +51,14 @@ export default class Main {
     this.panelList.disablePanel(this.currentPanelIndex);
 
     this.answerOptions[index].userAnswer = userAnswer;
+    this.answerOptions[index].isOvertime = this.isOvertime ?? false;
 
     let scoreDelta = 0;
 
-    if (this.answerOptions[index].correct !== userAnswer) {
+    if (this.isOvertime) {
+      scoreDelta = 0;
+    }
+    else if (this.answerOptions[index].correct !== userAnswer) {
       scoreDelta = -1 * userWeight;
     }
     else if (this.answerOptions[index].correct) {

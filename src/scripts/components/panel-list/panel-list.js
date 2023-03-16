@@ -58,6 +58,10 @@ export default class PanelList {
    */
   showResults(scorePoints) {
     this.panels.forEach((panel, index) => {
+      if (this.params.options[index].isOvertime) {
+        return;
+      }
+
       const wasAnswerCorrect =
         this.params.options[index].correct ===
         this.params.options[index].userAnswer;
