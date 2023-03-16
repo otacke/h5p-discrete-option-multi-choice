@@ -180,7 +180,17 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * @param {number} scoreDelta Score difference caused by answer.
    */
   handleAnswerGiven(scoreDelta) {
-    this.score = this.score + scoreDelta;
+    if (this.params.behaviour.singlePoint) {
+      if (this.score === -1 || scoreDelta < 0) {
+        this.score = -1;
+      }
+      else {
+        this.score = 1;
+      }
+    }
+    else {
+      this.score = this.score + scoreDelta;
+    }
 
     this.wasAnswerGiven = true;
     this.triggerXAPI('interacted');
@@ -215,9 +225,10 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     );
 
     if (this.params.behaviour.showResults) {
-      this.content.showResults(
-        { showScores: this.params.behaviour.mode === 'allOptions' }
-      );
+      const showScores = this.params.behaviour.mode === 'allOptions' &&
+        !this.params.behaviour.singlePoint;
+
+      this.content.showResults({ showScores: showScores });
     }
   }
 
