@@ -1,3 +1,4 @@
+import Dictionary from '@services/dictionary';
 import Globals from '@services/globals';
 import Util from '@services/util';
 import PanelList from '@components/panel-list/panel-list';
@@ -27,6 +28,9 @@ export default class Main {
 
     this.answerOptionsParams = Globals.get('params').answerOptions;
     this.mode = Globals.get('params').behaviour.mode;
+    this.confidenceLevels = Globals.get('params').behaviour.confidenceLevels
+      .split(',')
+      .map((level) => parseInt(level) / 100);
 
     this.currentPanelIndex = 0; // TODO: Previous state
   }
@@ -45,10 +49,14 @@ export default class Main {
    *
    * @param {number} index Index of the option.
    * @param {boolean} userAnswer Answer given by user.
-   * @param {number} [userWeight=1] Weight of user answer, [0...1].
+   * @param {number} [confidenceIndex] Confidence index.
    */
-  handleAnswered(index, userAnswer, userWeight = 1) {
+  handleAnswered(index, userAnswer, confidenceIndex) {
     this.panelList.disablePanel(this.currentPanelIndex);
+
+    const confidence = (this.mode === 'allOptionsWeighted') ?
+      this.confidenceLevels[confidenceIndex] :
+      1;
 
     this.answerOptions[index].userAnswer = userAnswer;
     this.answerOptions[index].isOvertime = this.isOvertime ?? false;
@@ -59,10 +67,13 @@ export default class Main {
       scoreDelta = 0;
     }
     else if (this.answerOptions[index].correct !== userAnswer) {
-      scoreDelta = -1 * userWeight;
+      scoreDelta = -1 * confidence;
     }
     else if (this.answerOptions[index].correct) {
-      scoreDelta = 1 * userWeight;
+      scoreDelta = 1 * confidence;
+    }
+    else if (this.mode !== 'standard') {
+      scoreDelta = 1 * confidence;
     }
 
     this.callbacks.onAnswerGiven(scoreDelta);
@@ -136,16 +147,40 @@ export default class Main {
     this.currentPanelIndex = 0;
     this.isOvertime = false;
 
+    const behavior = Globals.get('params').behaviour;
+
     // Set order of answer options
     this.order = [...Array(this.answerOptionsParams.length).keys()];
-    if (Globals.get('params').behaviour.randomAnswers) {
+    if (behavior.randomAnswers) {
       this.order = Util.shuffleArray(this.order);
     }
 
     this.answerOptions = [];
+
+    // Build selector parameters
+    let selector = null;
+    if (behavior.mode === 'allOptionsWeighted') {
+      const values = behavior.confidenceLevels
+        .split(',')
+        .map((value) => `${value.trim()}&nbsp;%`);
+
+      const labels = values.map((value) => {
+        return Dictionary.get('l10n.confidence').replace(/@percent/g, value);
+      });
+
+      selector = { options: [] };
+      for (let i = 0; i < values.length; i++) {
+        selector.options.push({
+          value: values[i],
+          label: labels?.[i] ?? values[i]
+        });
+      }
+    }
+
     this.order.forEach((index) => {
       const option = this.answerOptionsParams[index];
       option.userAnswer = null;
+      option.selector = selector;
 
       this.answerOptions.push(option);
     });
@@ -155,8 +190,8 @@ export default class Main {
         options: this.answerOptions
       },
       {
-        onAnswered: (id, score) => {
-          this.handleAnswered(id, score);
+        onAnswered: (id, score, confidenceIndex) => {
+          this.handleAnswered(id, score, confidenceIndex);
         }
       }
     );

@@ -23,9 +23,23 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         mode: 'standard',
         showResults: false,
         randomAnswers: true,
-        singlePoint: false
+        singlePoint: false,
+        confidenceLevels: '100,50,0'
       },
-      answers: []
+      answers: [],
+      l10n: {
+        check: 'Check',
+        submit: 'Submit',
+        showSolution: 'Show solution',
+        retry: 'Retry',
+        confidence: 'I am @percent sure.'
+      },
+      a11y: {
+        check: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
+        showSolution: 'Show the solution. The task will be marked with its correct solution.',
+        retry: 'Retry the task. Reset all responses and start the task over again.',
+        yourResult: 'You got @score out of @total points'
+      }
     }, params);
 
     // Ensure values match what discrete option multiple choice is for
@@ -115,12 +129,11 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * Add all buttons for H5P.Question.
    */
   addButtons() {
+    // Just to ensure that H5P.QuestionSet finds one - may not be necessary
     this.addButton(
       'check-answer',
       Dictionary.get('l10n.check'),
-      () => {
-        this.handleCheckAnswer();
-      },
+      () => {},
       this.params.behaviour.enableCheckButton,
       { 'aria-label': Dictionary.get('a11y.check') },
       {
@@ -150,13 +163,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       { 'aria-label': Dictionary.get('a11y.retry') },
       {}
     );
-  }
-
-  /**
-   * Handle click on 'Check' button.
-   */
-  handleCheckAnswer() {
-    // TODO
   }
 
   /**

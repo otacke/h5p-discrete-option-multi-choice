@@ -232,7 +232,7 @@
           },
           {
             "value": "allOptionsWeighted",
-            "label": "Present all options, let user weigh answers"
+            "label": "Present all options, let user state confidence"
           }
         ],
         "default": "standard"
@@ -300,6 +300,38 @@
             }
           ]
         }
+      },
+      {
+        "name": "confidenceLevels",
+        "type": "select",
+        "label": "Confidence levels",
+        "description": "Choose what confidence levels the user can choose from for each answer.",
+        "options": [
+          {
+            "value": "100,0",
+            "label": "100 % and 0 %"
+          },
+          {
+            "value": "100,50,0",
+            "label": "100 %, 50 % and 0 %"
+          },
+          {
+            "value": "100,75,50,25,0",
+            "label": "100 %, 75 %, 50 %, 25 % and 0 %"
+          }
+        ],
+        "default": "100,50,0",
+        "widget": "showWhen",
+        "showWhen": {
+          "rules": [
+            {
+              "field": "mode",
+              "equals": [
+                "allOptionsWeighted"
+              ]
+            }
+          ]
+        }
       }
     ]
   },
@@ -336,6 +368,14 @@
         "label": "\"Retry\" button label",
         "importance": "low",
         "default": "Retry"
+      },
+      {
+        "name": "confidence",
+        "type": "text",
+        "label": "Confidence",
+        "description": "@percent is a placeholder and will be replaced with the respective value.",
+        "importance": "low",
+        "default": "I am @percent sure."
       }
     ]
   },

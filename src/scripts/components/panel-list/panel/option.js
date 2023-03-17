@@ -1,5 +1,6 @@
 import Util from '@services/util';
 import OptionButton from './option-button';
+import CycleButton from './cycle-button';
 import './option.scss';
 
 /**
@@ -11,13 +12,17 @@ export default class Option {
    * @param {object} [params={}] Parameters.
    * @param {boolean} params.correct True, if option is correct.
    * @param {HTMLElement} params.text Text for option.
+   * @param {object} [params.selector] Selector configuration.
    * @param {object} [callbacks={}] Callbacks.
    * @param {function} [callbacks.onAnswered] Option was answered.
    */
   constructor(params = {}, callbacks = {}) {
     this.callbacks = Util.extend({
-      onAnswered: () => {}
+      onAnswered: () => {},
+      onConfidenceChanged: () => {}
     }, callbacks);
+
+    this.confidenceIndex = 0;
 
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-discrete-option-multi-choice-option');
@@ -26,6 +31,18 @@ export default class Option {
     text.classList.add('h5p-discrete-option-multi-choice-option-text');
     text.innerHTML = params.text;
     this.dom.append(text);
+
+    if (params.selector) {
+      this.selector = new CycleButton(
+        params.selector,
+        {
+          onClicked: (index) => {
+            this.confidenceIndex = index;
+          }
+        }
+      );
+      this.dom.append(this.selector.getDOM());
+    }
 
     const choices = document.createElement('div');
     choices.classList.add('h5p-discrete-option-multi-choice-choices');
@@ -39,7 +56,7 @@ export default class Option {
         onClicked: () => {
           this.selected = this.choiceCorrect;
           this.choiceCorrect.select();
-          this.callbacks.onAnswered(true);
+          this.callbacks.onAnswered(true, this.confidenceIndex);
         }
       }
     );
@@ -53,7 +70,7 @@ export default class Option {
         onClicked: () => {
           this.selected = this.choiceIncorrect;
           this.choiceIncorrect.select();
-          this.callbacks.onAnswered(false);
+          this.callbacks.onAnswered(false, this.confidenceIndex);
         }
       }
     );
@@ -102,6 +119,7 @@ export default class Option {
    * Enable.
    */
   enable() {
+    this.selector?.enable();
     this.choiceCorrect.enable();
     this.choiceIncorrect.enable();
   }
@@ -110,6 +128,7 @@ export default class Option {
    * Disable.
    */
   disable() {
+    this.selector?.disable();
     this.choiceCorrect.disable();
     this.choiceIncorrect.disable();
   }

@@ -15,15 +15,16 @@ export default class PanelList {
    */
   constructor(params = {}, callbacks = {}) {
     this.params = Util.extend({
+      options: []
     }, params);
 
     this.callbacks = Util.extend({
-      onAnswered: () => {}
+      onAnswered: () => {},
+      onConfidenceChanged: () => {}
     }, callbacks);
 
     this.dom = document.createElement('ul');
     this.dom.classList.add('h5p-discrete-option-multi-choice-panel-list');
-
 
     this.panels = params.options.map((option, index) => {
       return new Panel(
@@ -31,8 +32,8 @@ export default class PanelList {
           options: option
         },
         {
-          onAnswered: (score) => {
-            this.handleAnswered(index, score);
+          onAnswered: (score, confidence) => {
+            this.handleAnswered(index, score, confidence);
           }
         }
       );

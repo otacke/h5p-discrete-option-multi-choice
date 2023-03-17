@@ -16,7 +16,8 @@ export default class Panel {
    */
   constructor(params = {}, callbacks = {}) {
     this.callbacks = Util.extend({
-      onAnswered: () => {}
+      onAnswered: () => {},
+      onConfidenceChanged: () => {}
     }, callbacks);
 
     this.dom = document.createElement('li');
@@ -25,11 +26,15 @@ export default class Panel {
     this.option = new Option(
       {
         text: params.options.text,
-        correct: params.options.correct
+        correct: params.options.correct,
+        ...(
+          Object.keys(params.options.selector || {}).length &&
+          { selector: params.options.selector }
+        )
       },
       {
-        onAnswered: (score) => {
-          this.callbacks.onAnswered(score);
+        onAnswered: (score, confidence) => {
+          this.callbacks.onAnswered(score, confidence);
         }
       }
     );
