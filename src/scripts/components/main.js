@@ -238,7 +238,10 @@ export default class Main {
         if ((option.userAnswer === false)) {
           return 2 * index + 1;
         }
+
+        return null;
       })
+      .filter((response) => response !== null)
       .join('[,]');
   }
 
