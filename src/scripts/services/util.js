@@ -68,4 +68,16 @@ export default class Util {
 
     return array;
   }
+
+  /**
+   * Retrieve string without HTML tags.
+   *
+   * @param {string} html Input string.
+   * @returns {string} Output string.
+   */
+  static stripHTML(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  }
 }

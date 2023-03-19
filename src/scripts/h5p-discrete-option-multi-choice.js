@@ -32,7 +32,9 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         submit: 'Submit',
         showSolution: 'Show solution',
         retry: 'Retry',
-        confidence: 'I am @percent sure.'
+        confidence: 'I am @percent sure.',
+        correct: 'correct',
+        incorrect: 'incorrect'
       },
       a11y: {
         check: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
@@ -236,6 +238,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
       this.content.showResults({ showScores: showScores });
     }
+
+    this.triggerXAPIEvent('answered');
   }
 
   /**
@@ -312,7 +316,9 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-6}
    */
   getXAPIData() {
-    return { statement: {} }; // TODO
+    const xAPIEvent = this.createXAPIEvent('answered');
+
+    return { statement: xAPIEvent.data.statement };
   }
 
   /**
@@ -322,6 +328,92 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    */
   getCurrentState() {
     return {}; // TODO;
+  }
+
+  /**
+   * Trigger xAPI event.
+   *
+   * @param {string} verb Short id of the verb we want to trigger.
+   */
+  triggerXAPIEvent(verb) {
+    const xAPIEvent = this.createXAPIEvent(verb);
+    this.trigger(xAPIEvent);
+  }
+
+  /**
+   * Create an xAPI event.
+   *
+   * @param {string} verb Short id of the verb we want to trigger.
+   * @returns {H5P.XAPIEvent} Event template.
+   */
+  createXAPIEvent(verb) {
+    const xAPIEvent = this.createXAPIEventTemplate(verb);
+
+    Util.extend(
+      xAPIEvent.getVerifiedStatementValue(['object', 'definition']),
+      this.getXAPIDefinition()
+    );
+
+    if (verb === 'completed' || verb === 'answered') {
+      xAPIEvent.setScoredResult(
+        this.getScore(),
+        this.getMaxScore(),
+        this,
+        true,
+        this.getScore() === this.getMaxScore()
+      );
+
+      xAPIEvent.data.statement.result.response = this.content.getXAPIResponse();
+    }
+
+    return xAPIEvent;
+  }
+
+  /**
+   * Get the xAPI definition for the xAPI object.
+   *
+   * @returns {object} XAPI definition.
+   */
+  getXAPIDefinition() {
+    const definition = {};
+
+    definition.name = {};
+    definition.name[this.languageTag] = this.getTitle();
+    // Fallback for h5p-php-reporting, expects en-US
+    definition.name['en-US'] = definition.name[this.languageTag];
+
+    definition.description = {};
+    definition.description[this.languageTag] = this.getDescription();
+    // Fallback for h5p-php-reporting, expects en-US
+    definition.description['en-US'] = definition.description[this.languageTag];
+
+    definition.type = 'http://adlnet.gov/expapi/activities/cmi.interaction';
+    definition.interactionType = 'choice';
+
+    definition.choices = this.content.getXAPIChoices();
+
+    if (this.languageTag !== 'en-US') {
+      definition.choices = definition.choices.map((choice) => {
+        choice.description[this.languageTag] = choice.description['en-US'];
+
+        choice.description['en-US'] =
+          choice.description['en-US']
+            .replace(/@correct/, 'correct')
+            .replace(/@incorrect/, 'incorrect');
+
+        choice.description[this.languageTag] =
+          choice.description[this.languageTag]
+            .replace(/@correct/, Dictionary.get('l10n.correct'))
+            .replace(/@incorrect/, Dictionary.get('l10n.incorrect'));
+
+        return choice;
+      });
+    }
+
+    definition.correctResponsesPattern =
+       this.content.getXAPICorrectResponsesPattern();
+
+    return definition;
   }
 
   /**

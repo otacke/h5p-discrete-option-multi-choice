@@ -199,4 +199,95 @@ export default class Main {
 
     this.dom.append(this.panelList.getDOM());
   }
+
+  /**
+   * Get all options up to the first correct one.
+   *
+   * @returns {object[]} Scored answer options.
+   */
+  getScoredAnswerOptions() {
+    let scoredOptions = [...this.answerOptions];
+
+    if (this.mode === 'standard') {
+      scoredOptions = scoredOptions.reduce((selection, option) => {
+        if (selection.length && selection[selection.length - 1].correct) {
+          return selection;
+        }
+
+        selection.push(option);
+
+        return selection;
+      }, []);
+    }
+
+    return scoredOptions;
+  }
+
+  /**
+   * Get user response for xAPI statement.
+   *
+   * @returns {string} User response for xAPI statement.
+   */
+  getXAPIResponse() {
+    return this.getScoredAnswerOptions()
+      .map((option, index) => {
+        if ((option.userAnswer === true)) {
+          return 2 * index;
+        }
+
+        if ((option.userAnswer === false)) {
+          return 2 * index + 1;
+        }
+      })
+      .join('[,]');
+  }
+
+  /**
+   * Get choices for xAPI statement.
+   *
+   * @returns {object[]} Choices for xAPI statement.
+   */
+  getXAPIChoices() {
+    return this.getScoredAnswerOptions()
+      .reduce((choices, choice, index) => {
+        choices.push(
+          {
+            id: (index * 2).toString(),
+            description: {
+              'en-US': `${Util.stripHTML(choice.text)} (@correct)`
+            }
+          },
+          {
+            id: (index * 2 + 1).toString(),
+            description: {
+              'en-US': `${Util.stripHTML(choice.text)} (@incorrect)`
+            }
+          }
+        );
+
+        return choices;
+      }, []);
+  }
+
+  /**
+   * Get correct responses pattern for xAPI.
+   *
+   * @returns {string[]} Correct responses pattern.
+   */
+  getXAPICorrectResponsesPattern() {
+    return [
+      this.getScoredAnswerOptions()
+        .reduce((correct, option, index) => {
+          if (option.correct) {
+            correct.push((2 * index).toString());
+          }
+          else {
+            correct.push((2 * index + 1).toString());
+          }
+
+          return correct;
+        }, [])
+        .join('[,]')
+    ];
+  }
 }
