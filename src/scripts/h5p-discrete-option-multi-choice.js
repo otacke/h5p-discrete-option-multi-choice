@@ -259,7 +259,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-2}
    */
   getScore() {
-    return Math.max(0, Math.min(this.score, this.getMaxScore()));
+    return Math.round(Math.max(0, Math.min(this.score, this.getMaxScore())));
   }
 
   /**
