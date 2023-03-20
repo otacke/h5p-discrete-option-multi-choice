@@ -1,8 +1,17 @@
 .h5p-discrete-option-multi-choice-panel {
-  background-color: #ddd;
-  box-shadow: 0 0.1em 0 rgba(0,0,0,.3);
-  border-radius: 3px;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem 1rem;
+  list-style-type: none;
+
+  .h5p-discrete-option-multi-choice-question {
+    background-color: var(--color-panel-background);
+    box-shadow: 0 0.1em 0 rgba(0,0,0,.3);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+  }
 }

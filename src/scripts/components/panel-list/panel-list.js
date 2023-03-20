@@ -55,6 +55,18 @@ export default class PanelList {
   }
 
   /**
+   * Show feedback.
+   *
+   * @param {object} [params={}] Parameters.
+   * @param {(boolean|null)[]} params.selected Selected answers.
+   */
+  showFeedback(params = {}) {
+    this.panels.forEach((panel, index) => {
+      panel.showFeedback({ selected: params.selected[index] });
+    });
+  }
+
+  /**
    * Show results.
    *
    * @param {H5P.Question.ScorePoints} [scorePoints] Score points.
@@ -145,6 +157,24 @@ export default class PanelList {
     for (let index = 0; index < this.panels.length; index++) {
       this.disablePanel(index);
     }
+  }
+
+  /**
+   * Attach all options.
+   */
+  attachAllOptions() {
+    const alreadyAttachedCount = this.dom.childNodes.length;
+
+    this.panels.forEach((panel, index) => {
+      if (index < alreadyAttachedCount) {
+        return;
+      }
+
+      this.dom.append(this.panels[index].getDOM());
+      this.panels[index].disable();
+    });
+
+    Globals.get('resize')();
   }
 
   /**

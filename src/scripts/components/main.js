@@ -141,6 +141,22 @@ export default class Main {
   }
 
   /**
+   * Show feedback.
+   */
+  showFeedback() {
+    this.panelList.showFeedback(
+      { selected: this.answerOptions.map((option) => option.userAnswer) }
+    );
+  }
+
+  /**
+   * Show all panels.
+   */
+  showAllPanels() {
+    this.panelList.attachAllOptions();
+  }
+
+  /**
    * Show solutions.
    */
   showSolutions() {

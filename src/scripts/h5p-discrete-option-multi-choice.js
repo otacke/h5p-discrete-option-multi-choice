@@ -259,6 +259,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       this.content.showResults({ showScores: showScores });
     }
 
+    this.content.showFeedback();
+
     if (!params.skipXAPI) {
       this.triggerXAPIEvent('answered');
     }
@@ -313,6 +315,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.hideButton('show-solution');
     this.hideButton('try-again');
 
+    this.content.showAllPanels();
+    this.content.showFeedback();
     this.content.showSolutions();
   }
 

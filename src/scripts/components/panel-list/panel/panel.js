@@ -24,6 +24,10 @@ export default class Panel {
     this.dom = document.createElement('li');
     this.dom.classList.add('h5p-discrete-option-multi-choice-panel');
 
+    const question = document.createElement('div');
+    question.classList.add('h5p-discrete-option-multi-choice-question');
+    this.dom.appendChild(question);
+
     this.option = new Option(
       {
         text: params.options.text,
@@ -43,11 +47,11 @@ export default class Panel {
         }
       }
     );
-    this.dom.append(this.option.getDOM());
+    question.append(this.option.getDOM());
 
     this.feedback = new Feedback({
-      chosenFeedback: params.chosenFeedback,
-      notChosenFeedback: params.notChosenFeedback
+      chosenFeedback: params.options.hintAndFeedback.chosenFeedback,
+      notChosenFeedback: params.options.hintAndFeedback.notChosenFeedback
     });
     this.dom.append(this.feedback.getDOM());
   }
@@ -59,6 +63,23 @@ export default class Panel {
    */
   getDOM() {
     return this.dom;
+  }
+
+  /**
+   * Show feedback.
+   *
+   * @param {object} [params={}] Parameters.
+   * @param {boolean|null} params.selected Selected option.
+   */
+  showFeedback(params = {}) {
+    this.feedback.show(params.selected);
+  }
+
+  /**
+   * Hide feedback.
+   */
+  hideFeedback() {
+    this.feedback.hide();
   }
 
   /**
@@ -108,6 +129,7 @@ export default class Panel {
       previousState: {}
     }, params);
 
+    this.hideFeedback();
     this.option.reset({ previousState: params.previousState });
   }
 }
