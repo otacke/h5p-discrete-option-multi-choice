@@ -118,6 +118,18 @@ export default class Option {
   }
 
   /**
+   * Focus first element.
+   */
+  focus() {
+    if (this.confidenceSelector) {
+      this.confidenceSelector.focus();
+    }
+    else {
+      this.choiceCorrect.focus();
+    }
+  }
+
+  /**
    * Enable.
    */
   enable() {

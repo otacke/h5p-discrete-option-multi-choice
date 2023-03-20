@@ -42,7 +42,7 @@ export default class PanelList {
       );
     });
 
-    this.attachOption(0);
+    this.attachPanel(0);
   }
 
   /**
@@ -160,6 +160,19 @@ export default class PanelList {
   }
 
   /**
+   * Focus panel.
+   *
+   * @param {number} index Index of panel to give focus to.
+   */
+  focus(index) {
+    if (!this.panelExists(index)) {
+      return;
+    }
+
+    this.panels[index].focus();
+  }
+
+  /**
    * Attach all options.
    */
   attachAllOptions() {
@@ -182,7 +195,7 @@ export default class PanelList {
    *
    * @param {number} index Index of option to attach.
    */
-  attachOption(index) {
+  attachPanel(index) {
     if (!this.panelExists(index)) {
       return;
     }

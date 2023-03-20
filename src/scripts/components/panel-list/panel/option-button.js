@@ -42,9 +42,21 @@ export default class OptionButton {
   }
 
   /**
+   * Focus.
+   */
+  focus() {
+    if (this.isDisabled) {
+      return;
+    }
+
+    this.dom.focus();
+  }
+
+  /**
    * Enable.
    */
   enable() {
+    this.isDisabled = false;
     this.dom.removeAttribute('disabled');
   }
 
@@ -52,6 +64,7 @@ export default class OptionButton {
    * Disable.
    */
   disable() {
+    this.isDisabled = true;
     this.dom.setAttribute('disabled', 'disabled');
   }
 

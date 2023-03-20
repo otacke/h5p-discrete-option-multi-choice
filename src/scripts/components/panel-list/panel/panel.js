@@ -66,6 +66,13 @@ export default class Panel {
   }
 
   /**
+   * Focus option.
+   */
+  focus() {
+    this.option.focus();
+  }
+
+  /**
    * Show feedback.
    *
    * @param {object} [params={}] Parameters.

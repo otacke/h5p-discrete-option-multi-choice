@@ -194,7 +194,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * Handle click on 'Retry' button.
    */
   handleRetry() {
-    this.reset();
+    this.reset({ focus: true });
   }
 
   /**
@@ -329,7 +329,10 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.score = 0;
     this.wasAnswerGiven = false;
 
-    this.content.reset({ previousState: params.previousState ?? {} });
+    this.content.reset({
+      previousState: params.previousState ?? {},
+      focus: params.focus ?? false
+    });
 
     this.removeFeedback();
     this.hideButton('show-solution');
@@ -346,7 +349,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
    */
   resetTask() {
-    this.reset();
+    this.reset({ focus: true });
   }
 
   /**

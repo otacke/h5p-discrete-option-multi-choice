@@ -57,28 +57,29 @@ export default class Main {
   /**
    * Handle user answered true/false for an option.
    *
-   * @param {number} index Index of the option.
-   * @param {boolean} userAnswer Answer given by user.
+   * @param {object} [params={}] Parameters.
+   * @param {number} params.index Index of the option.
+   * @param {boolean} params.userAnswer Answer given by user.
    */
-  handleAnswered(index, userAnswer) {
+  handleAnswered(params = {}) {
     this.panelList.disablePanel(this.currentPanelIndex);
 
     const confidence = (this.mode === 'allOptionsWeighted') ?
-      this.confidenceLevels[this.answerOptions[index].confidenceIndex] :
+      this.confidenceLevels[this.answerOptions[params.index].confidenceIndex] :
       1;
 
-    this.answerOptions[index].userAnswer = userAnswer;
-    this.answerOptions[index].isOvertime = this.isOvertime ?? false;
+    this.answerOptions[params.index].userAnswer = params.userAnswer;
+    this.answerOptions[params.index].isOvertime = this.isOvertime ?? false;
 
     let scoreDelta = 0;
 
     if (this.isOvertime) {
       scoreDelta = 0;
     }
-    else if (this.answerOptions[index].correct !== userAnswer) {
+    else if (this.answerOptions[params.index].correct !== params.userAnswer) {
       scoreDelta = -1 * confidence;
     }
-    else if (this.answerOptions[index].correct) {
+    else if (this.answerOptions[params.index].correct) {
       scoreDelta = 1 * confidence;
     }
     else if (this.mode !== 'standard') {
@@ -123,9 +124,16 @@ export default class Main {
       }
     }
 
-    // Show next option
+    // Show next panel
     this.currentPanelIndex++;
-    this.panelList.attachOption(this.currentPanelIndex);
+    this.panelList.attachPanel(this.currentPanelIndex);
+
+    // Focus first option of next panel
+    if (params.focus) {
+      window.setTimeout(() => {
+        this.panelList.focus(this.currentPanelIndex);
+      }, 0); // Prevent jumping as iframe needs to resize
+    }
   }
 
   /**
@@ -231,8 +239,12 @@ export default class Main {
         options: this.answerOptions
       },
       {
-        onAnswered: (index, score) => {
-          this.handleAnswered(index, score);
+        onAnswered: (index, userAnswer) => {
+          this.handleAnswered({
+            index: index,
+            userAnswer: userAnswer,
+            focus: true
+          });
         },
         onConfidenceChanged: (index, confidenceIndex) => {
           this.handleConfidenceChanged(index, confidenceIndex);
@@ -246,12 +258,16 @@ export default class Main {
     if (params.previousState.answers) {
       params.previousState.answers.forEach((answer, index) => {
         if (typeof answer.userAnswer === 'boolean') {
-          this.handleAnswered(index, answer.userAnswer);
+          this.handleAnswered({ index: index, userAnswer: answer.userAnswer });
         }
       });
     }
 
     this.dom.append(this.panelList.getDOM());
+
+    if (params.focus) {
+      this.panelList.focus(this.currentPanelIndex);
+    }
   }
 
 

@@ -41,6 +41,17 @@ export default class CycleButton {
   }
 
   /**
+   * Focus.
+   */
+  focus() {
+    if (this.isDisabled) {
+      return;
+    }
+
+    this.dom.focus();
+  }
+
+  /**
    * Select index.
    *
    * @param {number} index Index of option to choose.
@@ -65,6 +76,7 @@ export default class CycleButton {
    * Enable.
    */
   enable() {
+    this.isDisabled = false;
     this.dom.removeAttribute('disabled');
   }
 
@@ -72,6 +84,7 @@ export default class CycleButton {
    * Disable.
    */
   disable() {
+    this.isDisabled = true;
     this.dom.setAttribute('disabled', 'disabled');
   }
 }
