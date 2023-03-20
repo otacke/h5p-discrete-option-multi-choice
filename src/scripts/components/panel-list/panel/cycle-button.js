@@ -13,6 +13,8 @@ export default class CycleButton {
    */
   constructor(params = {}, callbacks = {}) {
     this.params = Util.extend({
+      selector: {},
+      confidenceIndex: 0
     }, params);
 
     this.callbacks = Util.extend({
@@ -22,11 +24,11 @@ export default class CycleButton {
     this.dom = document.createElement('button');
     this.dom.classList.add('h5p-discrete-option-multi-choice-cycle-button');
     this.dom.addEventListener('click', () => {
-      this.select( (this.selectedIndex + 1) % this.params.options.length );
+      this.select( (this.selectedIndex + 1) % this.params.selector.options.length );
       this.callbacks.onClicked(this.selectedIndex);
     });
 
-    this.select(0); // TODO: Previous state.
+    this.select(this.params.confidenceIndex);
   }
 
   /**
@@ -44,15 +46,19 @@ export default class CycleButton {
    * @param {number} index Index of option to choose.
    */
   select(index) {
+    if (!this.params.selector) {
+      return;
+    }
+
     if (
       typeof index !== 'number' ||
-      index < 0 || index > this.params.options.length - 1
+      index < 0 || index > this.params.selector.options.length - 1
     ) {
       return;
     }
 
     this.selectedIndex = index;
-    this.dom.innerHTML = this.params.options[this.selectedIndex].value;
+    this.dom.innerHTML = this.params.selector.options[this.selectedIndex].value;
   }
 
   /**

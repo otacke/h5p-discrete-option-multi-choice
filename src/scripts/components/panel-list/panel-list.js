@@ -32,14 +32,16 @@ export default class PanelList {
           options: option
         },
         {
-          onAnswered: (score, confidence) => {
-            this.handleAnswered(index, score, confidence);
+          onAnswered: (score) => {
+            this.handleAnswered(index, score);
+          },
+          onConfidenceChanged: (confidenceIndex) => {
+            this.handleConfidenceChanged(index, confidenceIndex);
           }
         }
       );
     });
 
-    // TODO: previous state, potentially done in main
     this.attachOption(0);
   }
 
@@ -95,10 +97,19 @@ export default class PanelList {
    *
    * @param {number} index Index of answer option.
    * @param {boolean} userAnswer User answer.
-   * @param {number} [userWeight=1] User confidence weight for answer option.
    */
-  handleAnswered(index, userAnswer, userWeight = 1) {
-    this.callbacks.onAnswered(index, userAnswer, userWeight);
+  handleAnswered(index, userAnswer) {
+    this.callbacks.onAnswered(index, userAnswer);
+  }
+
+  /**
+   * Handle user changed confidence.
+   *
+   * @param {number} index Index of answer option.
+   * @param {boolean} confidenceIndex Confidence index.
+   */
+  handleConfidenceChanged(index, confidenceIndex) {
+    this.callbacks.onConfidenceChanged(index, confidenceIndex);
   }
 
   /**
@@ -125,6 +136,15 @@ export default class PanelList {
     }
 
     this.panels[index].disable();
+  }
+
+  /**
+   * Disable all panels.
+   */
+  disableAll() {
+    for (let index = 0; index < this.panels.length; index++) {
+      this.disablePanel(index);
+    }
   }
 
   /**
@@ -158,10 +178,16 @@ export default class PanelList {
 
   /**
    * Reset.
+   *
+   * @param {object} [params={}] Parameters.
    */
-  reset() {
-    this.panels.forEach((panel) => {
-      panel.reset();
+  reset(params = {}) {
+    params = Util.extend({
+      previousState: []
+    }, params);
+
+    this.panels.forEach((panel, index) => {
+      panel.reset({ previousState: params.previousState?.[index] });
     });
   }
 }

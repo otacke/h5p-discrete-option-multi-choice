@@ -32,7 +32,7 @@ export default class Main {
       .split(',')
       .map((level) => parseInt(level) / 100);
 
-    this.currentPanelIndex = 0; // TODO: Previous state
+    this.currentPanelIndex = 0;
   }
 
   /**
@@ -45,17 +45,26 @@ export default class Main {
   }
 
   /**
+   * Handle user changed confidence.
+   *
+   * @param {number} index Index of confidence level.
+   * @param {boolean} confidenceIndex Index of confidence.
+   */
+  handleConfidenceChanged(index, confidenceIndex) {
+    this.answerOptions[index].confidenceIndex = confidenceIndex;
+  }
+
+  /**
    * Handle user answered true/false for an option.
    *
    * @param {number} index Index of the option.
    * @param {boolean} userAnswer Answer given by user.
-   * @param {number} [confidenceIndex] Confidence index.
    */
-  handleAnswered(index, userAnswer, confidenceIndex) {
+  handleAnswered(index, userAnswer) {
     this.panelList.disablePanel(this.currentPanelIndex);
 
     const confidence = (this.mode === 'allOptionsWeighted') ?
-      this.confidenceLevels[confidenceIndex] :
+      this.confidenceLevels[this.answerOptions[index].confidenceIndex] :
       1;
 
     this.answerOptions[index].userAnswer = userAnswer;
@@ -135,27 +144,35 @@ export default class Main {
    * Show solutions.
    */
   showSolutions() {
+    this.panelList.disableAll();
     this.panelList.showSolutions();
   }
 
   /**
    * Reset.
+   *
+   * @param {object} [params={}] Parameters.
    */
-  reset() {
+  reset(params = {}) {
+    params = Util.extend({
+      previousState: {}
+    }, params);
+
     this.dom.innerHTML = '';
 
     this.currentPanelIndex = 0;
+
     this.isOvertime = false;
 
     const behavior = Globals.get('params').behaviour;
 
     // Set order of answer options
-    this.order = [...Array(this.answerOptionsParams.length).keys()];
-    if (behavior.randomAnswers) {
+    this.order = params.previousState.order ??
+      [...Array(this.answerOptionsParams.length).keys()];
+
+    if (behavior.randomAnswers && !params.previousState.order) {
       this.order = Util.shuffleArray(this.order);
     }
-
-    this.answerOptions = [];
 
     // Build selector parameters
     let selector = null;
@@ -177,9 +194,17 @@ export default class Main {
       }
     }
 
-    this.order.forEach((index) => {
-      const option = this.answerOptionsParams[index];
-      option.userAnswer = null;
+    this.answerOptions = [];
+
+    this.order.forEach((position, index) => {
+      const option = this.answerOptionsParams[position];
+
+      option.userAnswer =
+        params.previousState.answers?.[index].userAnswer ?? null;
+
+      option.confidenceIndex =
+        params.previousState.answers?.[index].confidenceIndex ?? 0;
+
       option.selector = selector;
 
       this.answerOptions.push(option);
@@ -190,14 +215,46 @@ export default class Main {
         options: this.answerOptions
       },
       {
-        onAnswered: (id, score, confidenceIndex) => {
-          this.handleAnswered(id, score, confidenceIndex);
+        onAnswered: (index, score) => {
+          this.handleAnswered(index, score);
+        },
+        onConfidenceChanged: (index, confidenceIndex) => {
+          this.handleConfidenceChanged(index, confidenceIndex);
         }
       }
     );
-    this.panelList.reset();
+
+    this.panelList.reset({ previousState: params.previousState.answers });
+
+    // Re-create previous user answers
+    if (params.previousState.answers) {
+      params.previousState.answers.forEach((answer, index) => {
+        if (typeof answer.userAnswer === 'boolean') {
+          this.handleAnswered(index, answer.userAnswer);
+        }
+      });
+    }
 
     this.dom.append(this.panelList.getDOM());
+  }
+
+
+  /**
+   * Get current state.
+   *
+   * @returns {object} Current state.
+   */
+  getCurrentState() {
+    return {
+      order: this.order,
+      answers: this.answerOptions.map((option) => {
+        return ({
+          userAnswer: option.userAnswer,
+          confidenceIndex: option.confidenceIndex
+        });
+      }),
+      isOvertime: this.isOvertime
+    };
   }
 
   /**

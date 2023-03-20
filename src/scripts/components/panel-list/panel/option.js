@@ -15,14 +15,13 @@ export default class Option {
    * @param {object} [params.selector] Selector configuration.
    * @param {object} [callbacks={}] Callbacks.
    * @param {function} [callbacks.onAnswered] Option was answered.
+   * @param {function} [callbacks.onConfidenceChanged] Confidence changed.
    */
   constructor(params = {}, callbacks = {}) {
     this.callbacks = Util.extend({
       onAnswered: () => {},
       onConfidenceChanged: () => {}
     }, callbacks);
-
-    this.confidenceIndex = 0;
 
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-discrete-option-multi-choice-option');
@@ -33,15 +32,18 @@ export default class Option {
     this.dom.append(text);
 
     if (params.selector) {
-      this.selector = new CycleButton(
-        params.selector,
+      this.confidenceSelector = new CycleButton(
         {
-          onClicked: (index) => {
-            this.confidenceIndex = index;
+          selector: params.selector,
+          confidenceIndex: params.confidenceIndex
+        },
+        {
+          onClicked: (confidenceIndex) => {
+            this.callbacks.onConfidenceChanged(confidenceIndex);
           }
         }
       );
-      this.dom.append(this.selector.getDOM());
+      this.dom.append(this.confidenceSelector.getDOM());
     }
 
     const choices = document.createElement('div');
@@ -56,7 +58,7 @@ export default class Option {
         onClicked: () => {
           this.selected = this.choiceCorrect;
           this.choiceCorrect.select();
-          this.callbacks.onAnswered(true, this.confidenceIndex);
+          this.callbacks.onAnswered(true);
         }
       }
     );
@@ -70,7 +72,7 @@ export default class Option {
         onClicked: () => {
           this.selected = this.choiceIncorrect;
           this.choiceIncorrect.select();
-          this.callbacks.onAnswered(false, this.confidenceIndex);
+          this.callbacks.onAnswered(false);
         }
       }
     );
@@ -119,7 +121,7 @@ export default class Option {
    * Enable.
    */
   enable() {
-    this.selector?.enable();
+    this.confidenceSelector?.enable();
     this.choiceCorrect.enable();
     this.choiceIncorrect.enable();
   }
@@ -128,17 +130,34 @@ export default class Option {
    * Disable.
    */
   disable() {
-    this.selector?.disable();
+    this.confidenceSelector?.disable();
     this.choiceCorrect.disable();
     this.choiceIncorrect.disable();
   }
 
   /**
    * Reset.
+   *
+   * @param {object} [params={}] Parameters.
    */
-  reset() {
-    this.selected = null;
-    this.choiceCorrect.unselect();
-    this.choiceIncorrect.unselect();
+  reset(params = {}) {
+    if (typeof params?.previousState?.userAnswer === 'boolean') {
+      this.selected = params.previousState.userAnswer ?
+        this.choiceCorrect :
+        this.choiceIncorrect;
+
+      this.selected.select();
+    }
+    else {
+      this.selected = null;
+      this.choiceCorrect.unselect();
+      this.choiceIncorrect.unselect();
+    }
+
+    if (this.confidenceSelector) {
+      this.confidenceSelector.select(
+        params?.previousState?.confidenceIndex ?? 0
+      );
+    }
   }
 }

@@ -13,6 +13,7 @@ export default class Panel {
    * @param {object} params.options Answer options.
    * @param {object} [callbacks={}] Callbacks.
    * @param {function} [callbacks.onAnswered] Option was answered.
+   * @param {function} [callbacks.onConfidenceChanged] Confidence changed.
    */
   constructor(params = {}, callbacks = {}) {
     this.callbacks = Util.extend({
@@ -30,11 +31,15 @@ export default class Panel {
         ...(
           Object.keys(params.options.selector || {}).length &&
           { selector: params.options.selector }
-        )
+        ),
+        confidenceIndex: params.options.confidenceIndex
       },
       {
-        onAnswered: (score, confidence) => {
-          this.callbacks.onAnswered(score, confidence);
+        onAnswered: (score) => {
+          this.callbacks.onAnswered(score);
+        },
+        onConfidenceChanged: (confidenceIndex) => {
+          this.callbacks.onConfidenceChanged(confidenceIndex);
         }
       }
     );
@@ -95,8 +100,14 @@ export default class Panel {
 
   /**
    * Reset.
+   *
+   * @param {object} [params={}] Parameters.
    */
-  reset() {
-    this.option.reset();
+  reset(params = {}) {
+    params = Util.extend({
+      previousState: {}
+    }, params);
+
+    this.option.reset({ previousState: params.previousState });
   }
 }

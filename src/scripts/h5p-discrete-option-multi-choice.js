@@ -79,8 +79,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         }
       }
     );
-
-    this.resetTask();
   }
 
   /**
@@ -125,6 +123,22 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     // Register content
     this.setContent(this.content.getDOM());
     this.addButtons();
+
+    this.reset({ previousState: this.previousState.content ?? {} });
+
+    if (
+      this.previousState.viewState ===
+      DiscreteOptionMultiChoice.VIEW_STATES['results']
+    ) {
+      this.handleGameOver({ skipXAPI: true });
+    }
+    else if (
+      this.previousState.viewState ===
+      DiscreteOptionMultiChoice.VIEW_STATES['solutions']
+    ) {
+      this.handleGameOver({ skipXAPI: true });
+      this.handleShowSolutions();
+    }
   }
 
   /**
@@ -171,6 +185,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * Handle click on 'Show solutions' button.
    */
   handleShowSolutions() {
+    this.setViewState('solutions');
     this.hideButton('show-solution');
     this.content.showSolutions();
   }
@@ -179,7 +194,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * Handle click on 'Retry' button.
    */
   handleRetry() {
-    this.resetTask();
+    this.reset();
   }
 
   /**
@@ -206,8 +221,13 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Handle game over.
+   *
+   * @param {object} [params={}] Parameters.
+   * @param {boolean} [params.skipXAPI] If true, skip xapi.
    */
-  handleGameOver() {
+  handleGameOver(params = {}) {
+    this.setViewState('results');
+
     if (this.params.behaviour.enableSolutionsButton) {
       this.showButton('show-solution');
     }
@@ -239,7 +259,9 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       this.content.showResults({ showScores: showScores });
     }
 
-    this.triggerXAPIEvent('answered');
+    if (!params.skipXAPI) {
+      this.triggerXAPIEvent('answered');
+    }
   }
 
   /**
@@ -288,7 +310,30 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-4}
    */
   showSolutions() {
-    // TODO
+    this.hideButton('show-solution');
+    this.hideButton('try-again');
+
+    this.content.showSolutions();
+  }
+
+  /**
+   * Reset.
+   *
+   * @param {object} [params={}] Parameters.
+   */
+  reset(params = {}) {
+    this.score = 0;
+    this.wasAnswerGiven = false;
+
+    this.content.reset({ previousState: params.previousState ?? {} });
+
+    this.removeFeedback();
+    this.hideButton('show-solution');
+    this.hideButton('try-again');
+
+    this.setViewState('task');
+
+    this.trigger('resize');
   }
 
   /**
@@ -297,16 +342,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
    */
   resetTask() {
-    this.score = 0;
-    this.wasAnswerGiven = false;
-
-    this.content.reset();
-
-    this.removeFeedback();
-    this.hideButton('show-solution');
-    this.hideButton('try-again');
-
-    this.trigger('resize');
+    this.reset();
   }
 
   /**
@@ -327,7 +363,10 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * @returns {object} Current state.
    */
   getCurrentState() {
-    return {}; // TODO;
+    return {
+      content: this.content.getCurrentState(),
+      viewState: this.viewState
+    };
   }
 
   /**
@@ -436,7 +475,37 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
   getDescription() {
     return DiscreteOptionMultiChoice.DEFAULT_DESCRIPTION;
   }
+
+  /**
+   * Set view state.
+   *
+   * @param {string|number} state State to be set.
+   */
+  setViewState(state) {
+    if (
+      typeof state === 'string' &&
+      DiscreteOptionMultiChoice.VIEW_STATES[state] !== undefined
+    ) {
+      this.viewState = DiscreteOptionMultiChoice.VIEW_STATES[state];
+    }
+    else if (
+      typeof state === 'number' &&
+      Object.values(DiscreteOptionMultiChoice.VIEW_STATES).includes(state)
+    ) {
+      this.viewState = state;
+
+      this.content.setViewState(
+        DiscreteOptionMultiChoice.VIEW_STATES
+          .find((value) => value === state)
+          .keys[0]
+      );
+    }
+  }
 }
 
 /** @constant {string} DEFAULT_DESCRIPTION Default description */
-DiscreteOptionMultiChoice.DEFAULT_DESCRIPTION = 'Discrete Option Multiple Choice';
+DiscreteOptionMultiChoice.DEFAULT_DESCRIPTION =
+  'Discrete Option Multiple Choice';
+
+/** @constant {object} view states */
+DiscreteOptionMultiChoice.VIEW_STATES = { task: 0, results: 1, solutions: 2 };
