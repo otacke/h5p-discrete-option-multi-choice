@@ -100,7 +100,7 @@ export default class PanelList {
       );
     });
 
-    this.attachPanel(0);
+    this.attachPanel(0, false);
     this.enablePanel(0);
   }
 
@@ -196,13 +196,14 @@ export default class PanelList {
    * Show panel.
    *
    * @param {number} index Index of panel to show.
+   * @param {boolean} animate If true, animate.
    */
-  showPanel(index) {
+  showPanel(index, animate) {
     if (!this.panelExists(index)) {
       return;
     }
 
-    this.panels[index].show();
+    this.panels[index].show({ animate: animate });
   }
 
   /**
@@ -298,13 +299,16 @@ export default class PanelList {
    * Attach option.
    *
    * @param {number} index Index of option to attach.
+   * @param {boolean} animate If true, animate.
    */
-  attachPanel(index) {
+  attachPanel(index, animate) {
     if (!this.panelExists(index)) {
       return;
     }
 
     this.dom.append(this.panels[index].getDOM());
+    this.showPanel(index, animate);
+
     Globals.get('resize')();
   }
 

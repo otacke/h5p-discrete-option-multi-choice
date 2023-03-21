@@ -140,7 +140,7 @@ export default class Main {
 
     // Show next panel
     this.currentPanelIndex++;
-    this.panelList.attachPanel(this.currentPanelIndex);
+    this.panelList.attachPanel(this.currentPanelIndex, true);
     this.panelList.enablePanel(this.currentPanelIndex);
 
     if (!params.quiet) {

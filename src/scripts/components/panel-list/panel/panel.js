@@ -33,6 +33,7 @@ export default class Panel {
      */
     this.dom = document.createElement('li');
     this.dom.classList.add('h5p-discrete-option-multi-choice-panel');
+    this.dom.classList.add('animate');
     this.dom.setAttribute('role', 'button');
     this.dom.setAttribute('tabindex', '0');
     this.dom.setAttribute('aria-controls', optionUUID);
@@ -186,9 +187,21 @@ export default class Panel {
 
   /**
    * Show.
+   *
+   * @param {object} [params={}] Parameters.
+   * @param {boolean} [params.animate] If true, animate.
    */
-  show() {
+  show(params = {}) {
     this.dom.classList.remove('display-none');
+
+    if (params.animate) {
+      window.requestAnimationFrame(() => {
+        this.dom.classList.remove('animate');
+      });
+    }
+    else {
+      this.dom.classList.remove('animate');
+    }
   }
 
   /**

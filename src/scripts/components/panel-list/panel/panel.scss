@@ -3,6 +3,11 @@
   display: flex;
   flex-direction: column;
   list-style-type: none;
+  transition: opacity 0.15s ease-in;
+
+  &.animate {
+    opacity: 0;
+  }
 
   &.display-none {
     display: none;
