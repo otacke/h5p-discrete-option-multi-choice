@@ -7,15 +7,19 @@
   background-color: rgba(255,255,255,0.5);
   border: 3px solid rgba(255,255,255,0.5); /* Same px value as used by Joubel in Interactive Book */
   border-radius: 3px; /* Same px value as used by Joubel in Interactive Book */
-  display: flex;
+  color: rgb(23, 104, 196);
   flex-shrink: 0;
   font-size: 1em;
   font-weight: bold;
   height: var(--button-size);
   line-height: calc(var(--button-size) - 6px);
+  overflow: hidden;
   padding: 0 0.5em 0 0.5em;
-  color: rgb(23, 104, 196);
   position: relative;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 6rem;
 
   &::before {
     content: '\f021';

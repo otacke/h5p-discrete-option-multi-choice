@@ -7,14 +7,13 @@
   background-size: var(--background-size) var(--background-size);
   border: 3px solid rgba(255,255,255,0.5); /* Same px value as used by Joubel in Interactive Book */
   border-radius: 3px; /* Same px value as used by Joubel in Interactive Book */
-  display: flex;
+  color: rgb(23, 104, 196);
   flex-shrink: 0;
   font-size: 1em;
   height: var(--button-size);
   padding: 0;
-  width: var(--button-size);
-  color: rgb(23, 104, 196);
   position: relative;
+  width: var(--button-size);
 
   &::before {
     font-family: "H5PFontAwesome4", sans-serif;
