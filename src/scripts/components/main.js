@@ -74,6 +74,10 @@ export default class Main {
   handleAnswered(params = {}) {
     this.panelList.disablePanel(this.currentPanelIndex);
 
+    if (Globals.get('params').behaviour.oneItemAtATime) {
+      this.panelList.hidePanel(this.currentPanelIndex);
+    }
+
     const confidence = (this.mode === 'allOptionsWeighted') ?
       this.confidenceLevels[this.answerOptions[params.index].confidenceIndex] :
       1;
@@ -162,6 +166,8 @@ export default class Main {
    * @param {object} [params={}] Parameters.
    */
   showResults(params = {}) {
+    this.panelList.showAll();
+
     this.scorePoints = this.scorePoints || new H5P.Question.ScorePoints();
     this.panelList.showResults(
       params.showScores ? this.scorePoints : null
@@ -181,6 +187,7 @@ export default class Main {
    * Show all panels.
    */
   showAllPanels() {
+    this.panelList.showAll();
     this.panelList.attachAllOptions();
   }
 
@@ -188,8 +195,22 @@ export default class Main {
    * Show solutions.
    */
   showSolutions() {
+    this.resultsMessage?.remove();
+
+    this.panelList.showAll();
     this.panelList.disableAll();
     this.panelList.showSolutions();
+  }
+
+  /**
+   * Append message for results.
+   */
+  appendResultsMessage() {
+    this.resultsMessage = document.createElement('p');
+    this.resultsMessage.classList.add('h5p-discrete-option-multi-choice-message');
+    this.resultsMessage.innerText = Dictionary.get('l10n.yourResults');
+
+    this.dom.append(this.resultsMessage);
   }
 
   /**

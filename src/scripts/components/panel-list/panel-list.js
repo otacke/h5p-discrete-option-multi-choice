@@ -193,6 +193,41 @@ export default class PanelList {
   }
 
   /**
+   * Show panel.
+   *
+   * @param {number} index Index of panel to show.
+   */
+  showPanel(index) {
+    if (!this.panelExists(index)) {
+      return;
+    }
+
+    this.panels[index].show();
+  }
+
+  /**
+   * Hide panel.
+   *
+   * @param {number} index Index of panel to hide.
+   */
+  hidePanel(index) {
+    if (!this.panelExists(index)) {
+      return;
+    }
+
+    this.panels[index].hide();
+  }
+
+  /**
+   * Show panel.
+   */
+  showAll() {
+    for (let index = 0; index < this.panels.length; index++) {
+      this.showPanel(index);
+    }
+  }
+
+  /**
    * Enable panel.
    *
    * @param {number} index Index of panel to enable.

@@ -21,6 +21,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         enableSolutionsButton: false, // @see {@link https://h5p.org/documentation/developers/contracts#guides-header-8}
         enableCheckButton: false, // Undocumented in contract, but required for Question Set
         mode: 'standard',
+        oneItemAtATime: true,
         showResults: false,
         randomAnswers: true,
         singlePoint: false,
@@ -32,7 +33,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         submit: 'Submit',
         showSolution: 'Show solution',
         retry: 'Retry',
-        confidence: 'I am @percent sure.'
+        confidence: 'I am @percent sure.',
+        yourResults: 'Your results'
       },
       a11y: {
         check: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
@@ -45,7 +47,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         correct: 'correct',
         incorrect: 'incorrect',
         panelNotExpandable: 'This item can currently not be expanded.',
-        panelAdded: 'Another answer option was added: @option',
+        panelAdded: 'Showing next answer option: @option',
         allAnswered: 'There are no more answer options to mark.',
         youMarkedThisAs: 'You marked this as @correctness',
         confidenceAt: 'Confidence: @value',
@@ -141,7 +143,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
     if (
       this.previousState.viewState ===
-      DiscreteOptionMultiChoice.VIEW_STATES['results']
+      DiscreteOptionMultiChoice.VIEW_STATES['results'] &&
+      this.viewState !== DiscreteOptionMultiChoice.VIEW_STATES['results']
     ) {
       this.handleGameOver({ skipXAPI: true });
     }
@@ -277,6 +280,12 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         !this.params.behaviour.singlePoint;
 
       this.content.showResults({ showScores: showScores });
+    }
+    else if (
+      Globals.get('params').behaviour.oneItemAtATime &&
+      !params.skipXAPI // Re-creating state, so not required again
+    ) {
+      this.content.appendResultsMessage();
     }
 
     this.content.showFeedback();

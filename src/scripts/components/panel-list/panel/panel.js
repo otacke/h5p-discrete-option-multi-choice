@@ -185,6 +185,20 @@ export default class Panel {
   }
 
   /**
+   * Show.
+   */
+  show() {
+    this.dom.classList.remove('display-none');
+  }
+
+  /**
+   * Hide.
+   */
+  hide() {
+    this.dom.classList.add('display-none');
+  }
+
+  /**
    * Enable.
    */
   enable() {

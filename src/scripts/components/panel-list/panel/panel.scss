@@ -4,6 +4,10 @@
   flex-direction: column;
   list-style-type: none;
 
+  &.display-none {
+    display: none;
+  }
+
   .h5p-discrete-option-multi-choice-question {
     background-color: var(--color-panel-background);
     box-shadow: 0 0.1em 0 rgba(0,0,0,.3);

@@ -254,6 +254,14 @@
         "optional": true
       },
       {
+        "name": "oneItemAtATime",
+        "type": "boolean",
+        "label": "Only one item visible at a time",
+        "importance": "low",
+        "description": "Enable to hide items that have been answered already.",
+        "default": true
+      },
+      {
         "name": "showResults",
         "type": "boolean",
         "label": "Show results",
@@ -376,6 +384,13 @@
         "description": "@percent is a placeholder and will be replaced with the respective value.",
         "importance": "low",
         "default": "I am @percent sure."
+      },
+      {
+        "name": "yourResults",
+        "type": "text",
+        "label": "Your results",
+        "importance": "low",
+        "default": "Your results"
       }
     ]
   },
@@ -460,10 +475,10 @@
       {
         "name": "panelAdded",
         "type": "text",
-        "label": "Added another answer option",
+        "label": "Showing next answer option",
         "description": "@option is a placeholder and will be replaced with the respective value.",
         "importance": "low",
-        "default": "Another answer option was added: @option"
+        "default": "Showing next answer option: @option"
       },
       {
         "name": "allAnswered",
