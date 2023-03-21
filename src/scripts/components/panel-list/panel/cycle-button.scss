@@ -8,7 +8,6 @@
   border: 3px solid rgba(255,255,255,0.5); /* Same px value as used by Joubel in Interactive Book */
   border-radius: 3px; /* Same px value as used by Joubel in Interactive Book */
   color: rgb(23, 104, 196);
-  flex-shrink: 0;
   font-size: 1em;
   font-weight: bold;
   height: var(--button-size);
@@ -19,7 +18,7 @@
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 6rem;
+  width: calc(2 * var(--button-size) + 0.5rem);
 
   &::before {
     content: '\f021';
