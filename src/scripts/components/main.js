@@ -1,4 +1,3 @@
-import Dictionary from '@services/dictionary';
 import Globals from '@services/globals';
 import Util from '@services/util';
 import PanelList from '@components/panel-list/panel-list';
@@ -131,7 +130,7 @@ export default class Main {
     // Focus first option of next panel
     if (params.focus) {
       window.setTimeout(() => {
-        this.panelList.focus(this.currentPanelIndex);
+        this.panelList.focus(this.currentPanelIndex, true);
       }, 0); // Prevent jumping as iframe needs to resize
     }
   }
@@ -201,12 +200,12 @@ export default class Main {
     // Build selector parameters
     let selector = null;
     if (behavior.mode === 'allOptionsWeighted') {
-      const values = behavior.confidenceLevels
+      const labels = behavior.confidenceLevels
         .split(',')
         .map((value) => `${value.trim()}&nbsp;%`);
 
-      const labels = values.map((value) => {
-        return Dictionary.get('l10n.confidence').replace(/@percent/g, value);
+      const values = labels.map((value) => {
+        return value.replace(/&nbsp;/, ' ');
       });
 
       selector = { options: [] };
@@ -266,7 +265,7 @@ export default class Main {
     this.dom.append(this.panelList.getDOM());
 
     if (params.focus) {
-      this.panelList.focus(this.currentPanelIndex);
+      this.panelList.focus(this.currentPanelIndex, true);
     }
   }
 

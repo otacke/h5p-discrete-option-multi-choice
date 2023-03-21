@@ -1,3 +1,4 @@
+import Dictionary from '@services/dictionary';
 import Util from '@services/util';
 import './option-button.scss';
 
@@ -11,24 +12,33 @@ export default class OptionButton {
    * @param {string[]} params.classes Class names.
    * @param {object} [callbacks={}] Callbacks.
    * @param {function} [callbacks.onClicked] Called on button clicked.
+   * @param {function} [callbacks.onGotFocus] Panel element got gocus.
    */
   constructor(params = {}, callbacks = {}) {
     this.params = Util.extend({
-      classes: []
     }, params);
 
     this.callbacks = Util.extend({
-      onClicked: () => {}
+      onClicked: () => {},
+      onGotFocus: () => {}
     }, callbacks);
 
     this.dom = document.createElement('button');
     this.dom.classList.add('h5p-discrete-option-multi-choice-option-button');
+    this.dom.classList.add(this.params.type);
+    this.dom.setAttribute(
+      'aria-label',
+      Dictionary.get('a11y.markAnswerAs')
+        .replace(/@status/, Dictionary.get('l10n.' + this.params.type))
+    );
     this.dom.setAttribute('disabled', 'disabled');
-    this.params.classes.forEach((className) => {
-      this.dom.classList.add(className);
-    });
+
     this.dom.addEventListener('click', () => {
       this.callbacks.onClicked();
+    });
+
+    this.dom.addEventListener('focus', () => {
+      this.callbacks.onGotFocus();
     });
   }
 

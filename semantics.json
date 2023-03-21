@@ -376,20 +376,6 @@
         "description": "@percent is a placeholder and will be replaced with the respective value.",
         "importance": "low",
         "default": "I am @percent sure."
-      },
-      {
-        "name": "correct",
-        "type": "text",
-        "label": "Correct",
-        "importance": "low",
-        "default": "correct"
-      },
-      {
-        "name": "incorrect",
-        "type": "text",
-        "label": "Incorrect",
-        "importance": "low",
-        "default": "incorrect"
       }
     ]
   },
@@ -427,6 +413,28 @@
         "description": "@score will be replaced by the number of points. @total will be replaced by the maximum possible points.",
         "importance": "low",
         "default": "You got @score out of @total points"
+      },
+      {
+        "name": "markAnswerAs",
+        "type": "text",
+        "label": "Mark answer as correct/incorrect",
+        "description": "@status is a placeholder and will be replaced with the respective value.",
+        "importance": "low",
+        "default": "Mark answer as @status"
+      },
+      {
+        "name": "correct",
+        "type": "text",
+        "label": "Correct",
+        "importance": "low",
+        "default": "correct"
+      },
+      {
+        "name": "incorrect",
+        "type": "text",
+        "label": "Incorrect",
+        "importance": "low",
+        "default": "incorrect"
       }
     ]
   }

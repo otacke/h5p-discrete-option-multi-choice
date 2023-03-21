@@ -10,6 +10,7 @@ export default class CycleButton {
    * @param {object} [params={}] Parameters.
    * @param {object} [callbacks={}] Callbacks.
    * @param {function} [callbacks.onClicked] On clicked handler.
+   * @param {function} [callbacks.onGotFocus] Panel element got gocus.
    */
   constructor(params = {}, callbacks = {}) {
     this.params = Util.extend({
@@ -18,7 +19,8 @@ export default class CycleButton {
     }, params);
 
     this.callbacks = Util.extend({
-      onClicked: () => {}
+      onClicked: () => {},
+      onGotFocus: () => {}
     }, callbacks);
 
     this.dom = document.createElement('button');
@@ -26,6 +28,9 @@ export default class CycleButton {
     this.dom.addEventListener('click', () => {
       this.select( (this.selectedIndex + 1) % this.params.selector.options.length );
       this.callbacks.onClicked(this.selectedIndex);
+    });
+    this.dom.addEventListener('focus', () => {
+      this.callbacks.onGotFocus();
     });
 
     this.select(this.params.confidenceIndex);
@@ -38,6 +43,15 @@ export default class CycleButton {
    */
   getDOM() {
     return this.dom;
+  }
+
+  /**
+   * Get current value.
+   *
+   * @returns {string} current value.
+   */
+  getCurrentValue() {
+    return this.params.selector.options[this.selectedIndex].value;
   }
 
   /**
@@ -69,7 +83,8 @@ export default class CycleButton {
     }
 
     this.selectedIndex = index;
-    this.dom.innerHTML = this.params.selector.options[this.selectedIndex].value;
+    this.dom.innerHTML = this.params.selector.options[this.selectedIndex].label;
+    this.dom.setAttribute('aria-label', `Change confidence. Current value: ${this.params.selector.options[this.selectedIndex].value}`);
   }
 
   /**

@@ -18,13 +18,69 @@ export default class PanelList {
       options: []
     }, params);
 
+    // Set uuid for each option
+    this.params.options = this.params.options.map((option) => {
+      option.uuid = H5P.createUUID();
+      return option;
+    });
+
     this.callbacks = Util.extend({
       onAnswered: () => {},
       onConfidenceChanged: () => {}
     }, callbacks);
 
+    this.attachedPanels = [];
+
     this.dom = document.createElement('ul');
     this.dom.classList.add('h5p-discrete-option-multi-choice-panel-list');
+    this.dom.setAttribute('aria-label', 'TODO: Answer options');
+    this.dom.addEventListener('keydown', (event) => {
+      if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
+        if (![...this.dom.childNodes].includes(event.target)) {
+          return; // Only care about panels
+        }
+
+        if (this.currentFocusPanel > 0) {
+          this.currentFocusPanel--;
+          this.focus(this.currentFocusPanel);
+        }
+      }
+      else if (event.code === 'ArrowDown' || event.code === 'ArrowRight') {
+        if (![...this.dom.childNodes].includes(event.target)) {
+          return; // Only care about panels
+        }
+
+        if (this.currentFocusPanel < this.dom.childNodes.length - 1) {
+          this.currentFocusPanel++;
+          this.focus(this.currentFocusPanel);
+        }
+      }
+      else if (event.code === 'Home') {
+        if (![...this.dom.childNodes].includes(event.target)) {
+          return; // Only care about panels
+        }
+
+        this.focus(0);
+      }
+      else if (event.code === 'End') {
+        if (![...this.dom.childNodes].includes(event.target)) {
+          return; // Only care about panels
+        }
+
+        this.focus(this.dom.childNodes.length - 1);
+      }
+      else if (event.code === 'Escape') {
+        this.panels.forEach((panel) => {
+          panel.collapse();
+        });
+        this.focus(this.currentFocusPanel);
+      }
+      else {
+        return;
+      }
+
+      event.preventDefault();
+    });
 
     this.panels = params.options.map((option, index) => {
       return new Panel(
@@ -37,6 +93,9 @@ export default class PanelList {
           },
           onConfidenceChanged: (confidenceIndex) => {
             this.handleConfidenceChanged(index, confidenceIndex);
+          },
+          onGotFocus: () => {
+            this.handlePanelGotFocus(index);
           }
         }
       );
@@ -125,6 +184,15 @@ export default class PanelList {
   }
 
   /**
+   * Handle panel received focus.
+   *
+   * @param {number} index Index of panel that got focus.
+   */
+  handlePanelGotFocus(index) {
+    this.currentFocusPanel = index;
+  }
+
+  /**
    * Enable panel.
    *
    * @param {number} index Index of panel to enable.
@@ -163,13 +231,14 @@ export default class PanelList {
    * Focus panel.
    *
    * @param {number} index Index of panel to give focus to.
+   * @param {boolean} [firstChild=false] If true, focus first child if possible.
    */
-  focus(index) {
+  focus(index, firstChild = false) {
     if (!this.panelExists(index)) {
       return;
     }
 
-    this.panels[index].focus();
+    this.panels[index].focus({ firstChild: firstChild });
   }
 
   /**

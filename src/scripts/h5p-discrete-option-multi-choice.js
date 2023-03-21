@@ -32,15 +32,16 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         submit: 'Submit',
         showSolution: 'Show solution',
         retry: 'Retry',
-        confidence: 'I am @percent sure.',
-        correct: 'correct',
-        incorrect: 'incorrect'
+        confidence: 'I am @percent sure.'
       },
       a11y: {
         check: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
         showSolution: 'Show the solution. The task will be marked with its correct solution.',
         retry: 'Retry the task. Reset all responses and start the task over again.',
-        yourResult: 'You got @score out of @total points'
+        yourResult: 'You got @score out of @total points',
+        markAnswerAs: 'Mark answer as @status',
+        correct: 'correct',
+        incorrect: 'incorrect'
       }
     }, params);
 
@@ -60,6 +61,9 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     Globals.set('params', this.params);
     Globals.set('resize', () => {
       this.trigger('resize');
+    });
+    Globals.set('read', (text) => {
+      this.read(text);
     });
 
     this.previousState = extras?.previousState || {};
@@ -449,8 +453,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
         choice.description[this.languageTag] =
           choice.description[this.languageTag]
-            .replace(/@correct/, Dictionary.get('l10n.correct'))
-            .replace(/@incorrect/, Dictionary.get('l10n.incorrect'));
+            .replace(/@correct/, Dictionary.get('a11y.correct'))
+            .replace(/@incorrect/, Dictionary.get('a11y.incorrect'));
 
         return choice;
       });

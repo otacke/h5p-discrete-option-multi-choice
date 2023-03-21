@@ -1,3 +1,4 @@
+import Globals from '@services/globals';
 import Util from '@services/util';
 import Option from './option';
 import Feedback from './feedback';
@@ -14,15 +15,57 @@ export default class Panel {
    * @param {object} [callbacks={}] Callbacks.
    * @param {function} [callbacks.onAnswered] Option was answered.
    * @param {function} [callbacks.onConfidenceChanged] Confidence changed.
+   * @param {function} [callbacks.onGotFocus] Panel element got gocus.
    */
   constructor(params = {}, callbacks = {}) {
     this.callbacks = Util.extend({
       onAnswered: () => {},
-      onConfidenceChanged: () => {}
+      onConfidenceChanged: () => {},
+      onGotFocus: () => {}
     }, callbacks);
 
+    const optionUUID = H5P.createUUID();
+
+    /*
+     * Implementing 'Disclosure' pattern (amended for disabled buttons)
+     * @see https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+     */
     this.dom = document.createElement('li');
     this.dom.classList.add('h5p-discrete-option-multi-choice-panel');
+    this.dom.setAttribute('role', 'button');
+    this.dom.setAttribute('tabindex', '0');
+    this.dom.setAttribute('aria-controls', optionUUID);
+
+    this.dom.addEventListener('keydown', (event) => {
+      if (event.target !== this.dom) {
+        return; // Do not mess with childrens' listeners
+      }
+
+      if (event.code === 'Space' || event.key === 'Enter') {
+        if (this.isDisabled) {
+          Globals.get('read')('TODO: Announce disabled');
+          return;
+        }
+
+        if (this.isExpanded) {
+          this.collapse();
+          this.option.disable();
+        }
+        else {
+          this.expand();
+          this.option.enable();
+        }
+      }
+      else {
+        return;
+      }
+
+      event.preventDefault();
+    });
+
+    this.dom.addEventListener('focus', () => {
+      this.callbacks.onGotFocus();
+    });
 
     const question = document.createElement('div');
     question.classList.add('h5p-discrete-option-multi-choice-question');
@@ -30,6 +73,7 @@ export default class Panel {
 
     this.option = new Option(
       {
+        uuid: optionUUID,
         text: params.options.text,
         correct: params.options.correct,
         ...(
@@ -44,6 +88,9 @@ export default class Panel {
         },
         onConfidenceChanged: (confidenceIndex) => {
           this.callbacks.onConfidenceChanged(confidenceIndex);
+        },
+        onGotFocus: () => {
+          this.callbacks.onGotFocus();
         }
       }
     );
@@ -67,9 +114,17 @@ export default class Panel {
 
   /**
    * Focus option.
+   *
+   * @param {object} [params={}] Parameters.
+   * @param {boolean} [params.firstChild] If true, try to focus first child.
    */
-  focus() {
-    this.option.focus();
+  focus(params = {}) {
+    if (params.firstChild) {
+      this.option.focus();
+    }
+    else {
+      this.dom.focus();
+    }
   }
 
   /**
@@ -113,17 +168,37 @@ export default class Panel {
   }
 
   /**
+   * Expand.
+   */
+  expand() {
+    this.isExpanded = true;
+    this.dom.setAttribute('aria-expanded', 'true');
+    this.option.enable();
+  }
+
+  /**
+   * Collapse.
+   */
+  collapse() {
+    this.isExpanded = false;
+    this.dom.setAttribute('aria-expanded', 'false');
+    this.option.disable();
+  }
+
+  /**
    * Enable.
    */
   enable() {
-    this.option.enable();
+    this.isDisabled = false;
+    this.expand();
   }
 
   /**
    * Disable.
    */
   disable() {
-    this.option.disable();
+    this.isDisabled = true;
+    this.collapse();
   }
 
   /**
