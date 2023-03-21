@@ -415,6 +415,20 @@
         "default": "You got @score out of @total points"
       },
       {
+        "name": "taskConfidenceMark",
+        "type": "text",
+        "label": "Choose confidence and mark answer",
+        "importance": "low",
+        "default": "Choose your confidence and mark as correct or incorrect"
+      },
+      {
+        "name": "taskMark",
+        "type": "text",
+        "label": "Mark as correct or incorrect",
+        "importance": "low",
+        "default": "Mark as correct or incorrect"
+      },
+      {
         "name": "markAnswerAs",
         "type": "text",
         "label": "Mark answer as correct/incorrect",
@@ -457,6 +471,38 @@
         "label": "No more answer options",
         "importance": "low",
         "default": "There are no more answer options to mark."
+      },
+      {
+        "name": "youMarkedThisAs",
+        "type": "text",
+        "label": "You marked this as correct/incorrect",
+        "description": "@correctness is a placeholder and will be replaced with the respective value.",
+        "importance": "low",
+        "default": "You marked this as @correctness"
+      },
+      {
+        "name": "confidenceAt",
+        "type": "text",
+        "label": "Confidence",
+        "description": "@value is a placeholder and will be replaced with the respective value.",
+        "importance": "low",
+        "default": "Confidence: @value"
+      },
+      {
+        "name": "yourAnswerWas",
+        "type": "text",
+        "label": "Your answer was correct/incorrect",
+        "description": "@correctness is a placeholder and will be replaced with the respective value.",
+        "importance": "low",
+        "default": "Your answer was @correctness"
+      },
+      {
+        "name": "correctAnswerWas",
+        "type": "text",
+        "label": "The correct answer was: correct/incorrect",
+        "description": "@correctness is a placeholder and will be replaced with the respective value.",
+        "importance": "low",
+        "default": "The correct answer was to mark this as @correctness"
       }
     ]
   }
