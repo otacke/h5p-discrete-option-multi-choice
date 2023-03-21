@@ -29,7 +29,7 @@ export default class OptionButton {
     this.dom.setAttribute(
       'aria-label',
       Dictionary.get('a11y.markAnswerAs')
-        .replace(/@status/, Dictionary.get('l10n.' + this.params.type))
+        .replace(/@status/, Dictionary.get('a11y.' + this.params.type))
     );
     this.dom.setAttribute('disabled', 'disabled');
 
