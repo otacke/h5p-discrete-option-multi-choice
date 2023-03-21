@@ -1,3 +1,4 @@
+import Dictionary from '@services/dictionary';
 import Util from '@services/util';
 import OptionButton from './option-button';
 import CycleButton from './cycle-button';
@@ -35,6 +36,8 @@ export default class Option {
     }, callbacks);
 
     this.isDisabled = true;
+    this.answeredCorrectly = null;
+    this.correctIsCorrect = null;
 
     this.focusElements = [];
 
@@ -165,28 +168,66 @@ export default class Option {
 
     if (this.isDisabled) {
       if (this.selected === this.choiceCorrect) {
-        labelSegments.push('Marked as correct');
+        labelSegments.push(
+          Dictionary.get('a11y.youMarkedThisAs')
+            .replace(/@correctness/, Dictionary.get('a11y.correct'))
+        );
       }
       else if (this.selected === this.choiceIncorrect) {
-        labelSegments.push('Marked as incorrect');
+        labelSegments.push(
+          Dictionary.get('a11y.youMarkedThisAs')
+            .replace(/@correctness/, Dictionary.get('a11y.incorrect'))
+        );
       }
 
       if (this.confidenceSelector) {
         labelSegments.push(
-          `Confidence: ${this.confidenceSelector.getCurrentValue()}`
+          Dictionary.get('a11y.confidenceAt')
+            .replace(/@value/, this.confidenceSelector.getCurrentValue())
+        );
+      }
+
+      if (typeof this.answeredCorrectly === 'boolean') {
+        const correctness = this.answeredCorrectly ?
+          Dictionary.get('a11y.correct') :
+          Dictionary.get('a11y.incorrect');
+
+        labelSegments.push(
+          Dictionary.get('a11y.yourAnswerWas')
+            .replace(/@correctness/, correctness)
+        );
+      }
+
+      if (
+        typeof this.correctIsCorrect === 'boolean' &&
+        this.answeredCorrectly === false
+      ) {
+        const correctness = this.correctIsCorrect ?
+          Dictionary.get('a11y.correct') :
+          Dictionary.get('a11y.incorrect');
+
+        labelSegments.push(
+          Dictionary.get('a11y.correctAnswerWas')
+            .replace(/@correctness/, correctness)
         );
       }
     }
     else {
       if (this.confidenceSelector) {
-        labelSegments.push('Choose your confidence and mark as correct or incorrect');
+        labelSegments.push(Dictionary.get('a11y.taskConfidenceMark'));
       }
       else {
-        labelSegments.push('Mark as correct or incorrect');
+        labelSegments.push(Dictionary.get('a11y.taskMark'));
       }
     }
 
-    this.dom.setAttribute('aria-label', labelSegments.join('. '));
+    // Ensure . at the end to have pause between automated and custom feedback.
+    let label = labelSegments.join('. ');
+    if (label.substring(label.length - 1) !== '.') {
+      label = `${label}.`;
+    }
+
+    this.dom.setAttribute('aria-label', label);
   }
 
   /**
@@ -200,23 +241,27 @@ export default class Option {
       return;
     }
 
+    this.answeredCorrectly = correct;
+
     this.selected?.markAnswer(correct, scorePoints);
 
     this.updateAriaLabel();
   }
 
   /**
-   * Mark option.
+   * Mark option as the correct solution.
    *
    * @param {object} [params={}] Parameters.
    */
   markOption(params = {}) {
     if (typeof params.correct === 'boolean' || params.correct === null) {
       this.choiceCorrect.markOption(params.correct);
+      this.correctIsCorrect = true;
     }
 
     if (typeof params.incorrect === 'boolean' || params.incorrect === null) {
       this.choiceIncorrect.markOption(params.incorrect);
+      this.correctIsCorrect = false;
     }
 
     this.updateAriaLabel();
@@ -266,6 +311,9 @@ export default class Option {
    * @param {object} [params={}] Parameters.
    */
   reset(params = {}) {
+    this.answeredCorrectly = null;
+    this.correctIsCorrect = null;
+
     if (typeof params?.previousState?.userAnswer === 'boolean') {
       this.selected = params.previousState.userAnswer ?
         this.choiceCorrect :

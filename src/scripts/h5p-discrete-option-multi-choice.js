@@ -39,12 +39,18 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         showSolution: 'Show the solution. The task will be marked with its correct solution.',
         retry: 'Retry the task. Reset all responses and start the task over again.',
         yourResult: 'You got @score out of @total points',
+        taskConfidenceMark: 'Choose your confidence and mark as correct or incorrect',
+        taskMark: 'Mark as correct or incorrect',
         markAnswerAs: 'Mark answer as @status',
         correct: 'correct',
         incorrect: 'incorrect',
         panelNotExpandable: 'This item can currently not be expanded.',
         panelAdded: 'Another answer option was added: @option',
-        allAnswered: 'There are no more answer options to mark.'
+        allAnswered: 'There are no more answer options to mark.',
+        youMarkedThisAs: 'You marked this as @correctness',
+        confidenceAt: 'Confidence: @value',
+        yourAnswerWas: 'Your answer was @correctness',
+        correctAnswerWas: 'The correct answer was to mark this as @correctness'
       }
     }, params);
 
