@@ -70,6 +70,7 @@ export default class Main {
    * @param {number} params.index Index of the option.
    * @param {boolean} params.userAnswer Answer given by user.
    * @param {boolean} [params.quiet=true] If false, announce change.
+   * @param {boolean} [params.focus=false] If true, focus next panel.
    */
   handleAnswered(params = {}) {
     params.quiet = params.quiet ?? true;
@@ -286,7 +287,8 @@ export default class Main {
           this.handleAnswered({
             index: index,
             userAnswer: userAnswer,
-            quiet: false
+            quiet: false,
+            focus: true
           });
         },
         onConfidenceChanged: (index, confidenceIndex) => {
