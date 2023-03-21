@@ -144,12 +144,12 @@
           "default": "Absenden"
         },
         {
-          "label": "Beschriftung des \"Wiederholen\"-Buttons",
-          "default": "Wiederholen"
-        },
-        {
           "label": "Beschriftung des \"Lösung anzeigen\"-Buttons",
           "default": "Lösung anzeigen"
+        },
+        {
+          "label": "Beschriftung des \"Wiederholen\"-Buttons",
+          "default": "Wiederholen"
         },
         {
           "label": "Zuversicht",
