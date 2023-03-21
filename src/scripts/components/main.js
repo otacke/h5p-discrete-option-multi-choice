@@ -72,6 +72,8 @@ export default class Main {
    * @param {boolean} [params.quiet=true] If false, announce change.
    */
   handleAnswered(params = {}) {
+    params.quiet = params.quiet ?? true;
+
     this.panelList.disablePanel(this.currentPanelIndex);
 
     if (Globals.get('params').behaviour.oneItemAtATime) {
@@ -100,7 +102,7 @@ export default class Main {
       scoreDelta = 1 * confidence;
     }
 
-    this.callbacks.onAnswerGiven(scoreDelta);
+    this.callbacks.onAnswerGiven(scoreDelta, params.quiet);
 
     if (
       this.currentPanelIndex >= this.answerOptions.length - 1 ||
@@ -113,7 +115,7 @@ export default class Main {
           return option.correct === option.userAnswer && !option.correct;
         })
       ) {
-        this.callbacks.onAnswerGiven(1);
+        this.callbacks.onAnswerGiven(1, params.quiet);
       }
 
       this.callbacks.onGameOver({ quiet: params.quiet }); // Nothing more to show
@@ -284,7 +286,7 @@ export default class Main {
           this.handleAnswered({
             index: index,
             userAnswer: userAnswer,
-            focus: true
+            quiet: false
           });
         },
         onConfidenceChanged: (index, confidenceIndex) => {

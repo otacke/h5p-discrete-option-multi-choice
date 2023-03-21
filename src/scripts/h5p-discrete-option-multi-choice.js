@@ -86,8 +86,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.content = new Main(
       {},
       {
-        onAnswerGiven: (scoreDelta) => {
-          this.handleAnswerGiven(scoreDelta);
+        onAnswerGiven: (scoreDelta, skipXAPI) => {
+          this.handleAnswerGiven(scoreDelta, skipXAPI);
         },
         onGameOver: (params) => {
           this.handleGameOver(params);
@@ -219,8 +219,9 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    * Handle user gave answer.
    *
    * @param {number} scoreDelta Score difference caused by answer.
+   * @param {boolean} skipXAPI If true, skipXAPI.
    */
-  handleAnswerGiven(scoreDelta) {
+  handleAnswerGiven(scoreDelta, skipXAPI = false) {
     if (this.params.behaviour.singlePoint) {
       if (this.score === -1 || scoreDelta < 0) {
         this.score = -1;
@@ -234,7 +235,13 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     }
 
     this.wasAnswerGiven = true;
-    this.triggerXAPI('interacted');
+
+    this.currentAnswerIndex++;
+
+    if (!skipXAPI) {
+      this.triggerXAPIEvent('interacted');
+      this.triggerXAPIEvent('progressed');
+    }
   }
 
   /**
@@ -360,6 +367,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    */
   reset(params = {}) {
     this.score = 0;
+    this.currentAnswerIndex = 1;
     this.wasAnswerGiven = false;
 
     this.content.reset({
@@ -405,6 +413,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
   getCurrentState() {
     return {
       content: this.content.getCurrentState(),
+      currentAnswerIndex: this.currentAnswerIndex,
       viewState: this.viewState
     };
   }
@@ -443,6 +452,11 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       );
 
       xAPIEvent.data.statement.result.response = this.content.getXAPIResponse();
+    }
+    else if (verb === 'progressed') {
+      xAPIEvent.data.statement.object.definition
+        .extensions['http://id.tincanapi.com/extension/ending-point'] =
+          this.currentAnswerIndex;
     }
 
     return xAPIEvent;
