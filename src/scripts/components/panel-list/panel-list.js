@@ -33,7 +33,6 @@ export default class PanelList {
 
     this.dom = document.createElement('ul');
     this.dom.classList.add('h5p-discrete-option-multi-choice-panel-list');
-    this.dom.setAttribute('aria-label', 'TODO: Answer options');
     this.dom.addEventListener('keydown', (event) => {
       if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
         if (![...this.dom.childNodes].includes(event.target)) {
@@ -102,6 +101,7 @@ export default class PanelList {
     });
 
     this.attachPanel(0);
+    this.enablePanel(0);
   }
 
   /**
@@ -270,8 +270,6 @@ export default class PanelList {
     }
 
     this.dom.append(this.panels[index].getDOM());
-    this.panels[index].enable();
-
     Globals.get('resize')();
   }
 

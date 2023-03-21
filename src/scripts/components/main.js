@@ -1,3 +1,4 @@
+import Dictionary from '@services/dictionary';
 import Globals from '@services/globals';
 import Util from '@services/util';
 import PanelList from '@components/panel-list/panel-list';
@@ -44,6 +45,15 @@ export default class Main {
   }
 
   /**
+   * Focus a panel.
+   *
+   * @param {number} index Index of panel to focus.
+   */
+  focusPanel(index) {
+    this.panelList.focus(index);
+  }
+
+  /**
    * Handle user changed confidence.
    *
    * @param {number} index Index of confidence level.
@@ -59,6 +69,7 @@ export default class Main {
    * @param {object} [params={}] Parameters.
    * @param {number} params.index Index of the option.
    * @param {boolean} params.userAnswer Answer given by user.
+   * @param {boolean} [params.quiet=true] If false, announce change.
    */
   handleAnswered(params = {}) {
     this.panelList.disablePanel(this.currentPanelIndex);
@@ -101,20 +112,20 @@ export default class Main {
         this.callbacks.onAnswerGiven(1);
       }
 
-      this.callbacks.onGameOver(); // Nothing more to show
+      this.callbacks.onGameOver({ quiet: params.quiet }); // Nothing more to show
       return;
     }
 
     // Check whether continuing is possible in standard mode
     if (this.mode === 'standard') {
       if (scoreDelta < 0) {
-        this.callbacks.onGameOver(); // Wrong answer
+        this.callbacks.onGameOver({ quiet: params.quiet }); // Wrong answer
         return;
       }
 
       // Randomly add one more option on correct answer to distract
       if (scoreDelta === 1 && Math.random() < 0.5) {
-        this.callbacks.onGameOver(); // Done
+        this.callbacks.onGameOver({ quiet: params.quiet }); // Done
         return;
       }
 
@@ -126,12 +137,22 @@ export default class Main {
     // Show next panel
     this.currentPanelIndex++;
     this.panelList.attachPanel(this.currentPanelIndex);
+    this.panelList.enablePanel(this.currentPanelIndex);
+
+    if (!params.quiet) {
+      const message = Util.stripHTML(
+        Dictionary.get('a11y.panelAdded')
+          .replace(/@option/, this.answerOptions[this.currentPanelIndex].text)
+      );
+
+      Globals.get('read')(message);
+    }
 
     // Focus first option of next panel
     if (params.focus) {
       window.setTimeout(() => {
         this.panelList.focus(this.currentPanelIndex, true);
-      }, 0); // Prevent jumping as iframe needs to resize
+      }, 10); // Prevent jumping before iframe resize and let screenreader read
     }
   }
 

@@ -41,7 +41,10 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         yourResult: 'You got @score out of @total points',
         markAnswerAs: 'Mark answer as @status',
         correct: 'correct',
-        incorrect: 'incorrect'
+        incorrect: 'incorrect',
+        panelNotExpandable: 'This item can currently not be expanded.',
+        panelAdded: 'Another answer option was added: @option',
+        allAnswered: 'There are no more answer options to mark.'
       }
     }, params);
 
@@ -78,8 +81,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         onAnswerGiven: (scoreDelta) => {
           this.handleAnswerGiven(scoreDelta);
         },
-        onGameOver: () => {
-          this.handleGameOver();
+        onGameOver: (params) => {
+          this.handleGameOver(params);
         }
       }
     );
@@ -192,6 +195,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.setViewState('solutions');
     this.hideButton('show-solution');
     this.content.showSolutions();
+
+    this.content.focusPanel(0);
   }
 
   /**
@@ -228,8 +233,13 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    *
    * @param {object} [params={}] Parameters.
    * @param {boolean} [params.skipXAPI] If true, skip xapi.
+   * @param {boolean} [params.quiet=true] If false, announce game over.
    */
   handleGameOver(params = {}) {
+    if (!params.quiet) {
+      this.read(Dictionary.get('a11y.allAnswered'));
+    }
+
     this.setViewState('results');
 
     if (this.params.behaviour.enableSolutionsButton) {
@@ -264,6 +274,10 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     }
 
     this.content.showFeedback();
+
+    window.setTimeout(() => {
+      this.content.focusPanel(0);
+    }, 50); // Give time to read results
 
     if (!params.skipXAPI) {
       this.triggerXAPIEvent('answered');

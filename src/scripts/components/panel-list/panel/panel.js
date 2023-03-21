@@ -1,3 +1,4 @@
+import Dictionary from '@services/dictionary';
 import Globals from '@services/globals';
 import Util from '@services/util';
 import Option from './option';
@@ -43,17 +44,15 @@ export default class Panel {
 
       if (event.code === 'Space' || event.key === 'Enter') {
         if (this.isDisabled) {
-          Globals.get('read')('TODO: Announce disabled');
+          Globals.get('read')(Dictionary.get('a11y.panelNotExpandable'));
           return;
         }
 
         if (this.isExpanded) {
           this.collapse();
-          this.option.disable();
         }
         else {
           this.expand();
-          this.option.enable();
         }
       }
       else {
