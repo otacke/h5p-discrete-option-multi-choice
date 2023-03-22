@@ -1,9 +1,6 @@
 @import "@styles/main";
 
 .h5p-discrete-option-multi-choice-cycle-button {
-  --button-size: 3em;
-  --background-size: 1.25em;
-
   background-color: rgba(255,255,255,0.5);
   border: 3px solid rgba(255,255,255,0.5); /* Same px value as used by Joubel in Interactive Book */
   border-radius: 3px; /* Same px value as used by Joubel in Interactive Book */

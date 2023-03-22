@@ -136,7 +136,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     }
 
     // Register content
-    this.setContent(this.content.getDOM());
+    const contentDOM = this.content.getDOM();
+    this.setContent(contentDOM);
     this.addButtons();
 
     this.reset({ previousState: this.previousState.content ?? {} });
@@ -155,6 +156,24 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       this.handleGameOver({ skipXAPI: true });
       this.handleShowSolutions();
     }
+
+    // Container/media queries seem to kick in late, so we need one extra resize
+    const callback = window.requestIdleCallback ?
+      window.requestIdleCallback :
+      window.requestAnimationFrame;
+
+    callback(() => {
+      this.observer = this.observer || new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          this.observer.disconnect();
+          this.trigger('resize');
+        }
+      }, {
+        root: document.documentElement,
+        threshold: 0
+      });
+      this.observer.observe(contentDOM);
+    });
   }
 
   /**

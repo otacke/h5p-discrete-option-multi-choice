@@ -43,6 +43,9 @@ export default class Option {
 
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-discrete-option-multi-choice-option');
+    if (params.selector) {
+      this.dom.classList.add('has-confidence-selector');
+    }
 
     this.dom.addEventListener('keydown', (event) => {
       if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
