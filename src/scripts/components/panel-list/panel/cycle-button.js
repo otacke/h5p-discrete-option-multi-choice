@@ -38,7 +38,6 @@ export default class CycleButton {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} DOM.
    */
   getDOM() {
@@ -47,7 +46,6 @@ export default class CycleButton {
 
   /**
    * Get current value.
-   *
    * @returns {string} current value.
    */
   getCurrentValue() {
@@ -67,7 +65,6 @@ export default class CycleButton {
 
   /**
    * Select index.
-   *
    * @param {number} index Index of option to choose.
    */
   select(index) {

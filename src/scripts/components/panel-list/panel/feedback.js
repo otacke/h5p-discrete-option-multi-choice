@@ -24,7 +24,6 @@ export default class Feedback {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} Feedback DOM.
    */
   getDOM() {
@@ -33,7 +32,6 @@ export default class Feedback {
 
   /**
    * Show.
-   *
    * @param {boolean|null} selected Boolean for selected answer, null for none.
    */
   show(selected) {

@@ -236,7 +236,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Handle user gave answer.
-   *
    * @param {number} scoreDelta Score difference caused by answer.
    * @param {boolean} skipXAPI If true, skipXAPI.
    */
@@ -265,7 +264,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Handle game over.
-   *
    * @param {object} [params={}] Parameters.
    * @param {boolean} [params.skipXAPI] If true, skip xapi.
    * @param {boolean} [params.quiet=true] If false, announce game over.
@@ -327,7 +325,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Check if result has been submitted or input has been given.
-   *
    * @returns {boolean} True, if answer was given.
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-1}
    */
@@ -337,7 +334,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Get latest score.
-   *
    * @returns {number} latest score.
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-2}
    */
@@ -347,7 +343,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Get maximum possible score.
-   *
    * @returns {number} Score necessary for mastering.
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-3}
    */
@@ -367,7 +362,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Show solutions.
-   *
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-4}
    */
   showSolutions() {
@@ -381,7 +375,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Reset.
-   *
    * @param {object} [params={}] Parameters.
    */
   reset(params = {}) {
@@ -405,7 +398,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Reset task.
-   *
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
    */
   resetTask() {
@@ -414,7 +406,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Get xAPI data.
-   *
    * @returns {object} XAPI statement.
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-6}
    */
@@ -426,7 +417,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Answer call to return the current state.
-   *
    * @returns {object} Current state.
    */
   getCurrentState() {
@@ -439,7 +429,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Trigger xAPI event.
-   *
    * @param {string} verb Short id of the verb we want to trigger.
    */
   triggerXAPIEvent(verb) {
@@ -449,7 +438,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Create an xAPI event.
-   *
    * @param {string} verb Short id of the verb we want to trigger.
    * @returns {H5P.XAPIEvent} Event template.
    */
@@ -483,7 +471,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Get the xAPI definition for the xAPI object.
-   *
    * @returns {object} XAPI definition.
    */
   getXAPIDefinition() {
@@ -530,7 +517,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Get task title.
-   *
    * @returns {string} Title.
    */
   getTitle() {
@@ -542,7 +528,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Get description.
-   *
    * @returns {string} Description.
    */
   getDescription() {
@@ -551,7 +536,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Set view state.
-   *
    * @param {string|number} state State to be set.
    */
   setViewState(state) {

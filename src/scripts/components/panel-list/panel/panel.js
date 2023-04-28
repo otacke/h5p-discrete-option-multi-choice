@@ -105,7 +105,6 @@ export default class Panel {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} Panel list DOM.
    */
   getDOM() {
@@ -114,7 +113,6 @@ export default class Panel {
 
   /**
    * Focus option.
-   *
    * @param {object} [params={}] Parameters.
    * @param {boolean} [params.firstChild] If true, try to focus first child.
    */
@@ -129,7 +127,6 @@ export default class Panel {
 
   /**
    * Show feedback.
-   *
    * @param {object} [params={}] Parameters.
    * @param {boolean|null} params.selected Selected option.
    */
@@ -146,7 +143,6 @@ export default class Panel {
 
   /**
    * Mark answer.
-   *
    * @param {boolean|null} correct True: correct. False: incorrect. Null: reset.
    * @param {HTMLElement|undefined} [scorePoints] Score points.
    */
@@ -160,7 +156,6 @@ export default class Panel {
 
   /**
    * Mark option.
-   *
    * @param {object} [params={}] Parameters.
    */
   markOption(params = {}) {
@@ -187,7 +182,6 @@ export default class Panel {
 
   /**
    * Show.
-   *
    * @param {object} [params={}] Parameters.
    * @param {boolean} [params.animate] If true, animate.
    */
@@ -229,7 +223,6 @@ export default class Panel {
 
   /**
    * Reset.
-   *
    * @param {object} [params={}] Parameters.
    */
   reset(params = {}) {

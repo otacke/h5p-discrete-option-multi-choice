@@ -44,7 +44,6 @@ export default class OptionButton {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} Button DOM.
    */
   getDOM() {
@@ -94,7 +93,6 @@ export default class OptionButton {
 
   /**
    * Mark answer.
-   *
    * @param {boolean|null} correct True: correct. False: incorrect. Null: reset.
    * @param {HTMLElement|undefined} [scorePoints] Score points.
    */
@@ -121,7 +119,6 @@ export default class OptionButton {
 
   /**
    * Mark option.
-   *
    * @param {boolean|null} correct True: correct. False: incorrect. Null: reset.
    */
   markOption(correct) {

@@ -37,7 +37,6 @@ export default class Main {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} Content DOM.
    */
   getDOM() {
@@ -46,7 +45,6 @@ export default class Main {
 
   /**
    * Focus a panel.
-   *
    * @param {number} index Index of panel to focus.
    */
   focusPanel(index) {
@@ -55,7 +53,6 @@ export default class Main {
 
   /**
    * Handle user changed confidence.
-   *
    * @param {number} index Index of confidence level.
    * @param {boolean} confidenceIndex Index of confidence.
    */
@@ -65,7 +62,6 @@ export default class Main {
 
   /**
    * Handle user answered true/false for an option.
-   *
    * @param {object} [params={}] Parameters.
    * @param {number} params.index Index of the option.
    * @param {boolean} params.userAnswer Answer given by user.
@@ -165,7 +161,6 @@ export default class Main {
 
   /**
    * Show results.
-   *
    * @param {object} [params={}] Parameters.
    */
   showResults(params = {}) {
@@ -218,7 +213,6 @@ export default class Main {
 
   /**
    * Reset.
-   *
    * @param {object} [params={}] Parameters.
    */
   reset(params = {}) {
@@ -318,7 +312,6 @@ export default class Main {
 
   /**
    * Get current state.
-   *
    * @returns {object} Current state.
    */
   getCurrentState() {
@@ -336,7 +329,6 @@ export default class Main {
 
   /**
    * Get all options up to the first correct one.
-   *
    * @returns {object[]} Scored answer options.
    */
   getScoredAnswerOptions() {
@@ -359,7 +351,6 @@ export default class Main {
 
   /**
    * Get user response for xAPI statement.
-   *
    * @returns {string} User response for xAPI statement.
    */
   getXAPIResponse() {
@@ -381,7 +372,6 @@ export default class Main {
 
   /**
    * Get choices for xAPI statement.
-   *
    * @returns {object[]} Choices for xAPI statement.
    */
   getXAPIChoices() {
@@ -408,7 +398,6 @@ export default class Main {
 
   /**
    * Get correct responses pattern for xAPI.
-   *
    * @returns {string[]} Correct responses pattern.
    */
   getXAPICorrectResponsesPattern() {

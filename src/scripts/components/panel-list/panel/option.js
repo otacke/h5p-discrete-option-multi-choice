@@ -156,7 +156,6 @@ export default class Option {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} Option DOM.
    */
   getDOM() {
@@ -235,7 +234,6 @@ export default class Option {
 
   /**
    * Mark answer.
-   *
    * @param {boolean|null} correct True: correct. False: incorrect. Null: reset.
    * @param {HTMLElement|undefined} [scorePoints] Score points.
    */
@@ -253,7 +251,6 @@ export default class Option {
 
   /**
    * Mark option as the correct solution.
-   *
    * @param {object} [params={}] Parameters.
    */
   markOption(params = {}) {
@@ -310,7 +307,6 @@ export default class Option {
 
   /**
    * Reset.
-   *
    * @param {object} [params={}] Parameters.
    */
   reset(params = {}) {

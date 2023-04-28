@@ -2,7 +2,6 @@
 export default class Util {
   /**
    * Extend an array just like JQuery's extend.
-   *
    * @returns {object} Merged objects.
    */
   static extend() {
@@ -27,7 +26,6 @@ export default class Util {
   /**
    * Format language tag (RFC 5646). Assuming "language-coutry". No validation.
    * Cmp. https://tools.ietf.org/html/rfc5646
-   *
    * @param {string} languageCode Language tag.
    * @returns {string} Formatted language tag.
    */
@@ -52,7 +50,6 @@ export default class Util {
 
   /**
    * Get shuffled array.
-   *
    * @param {string[]|number[]} input Input array.
    * @returns {string[]|number[]} Shuffled array.
    */
@@ -71,7 +68,6 @@ export default class Util {
 
   /**
    * Retrieve string without HTML tags.
-   *
    * @param {string} html Input string.
    * @returns {string} Output string.
    */

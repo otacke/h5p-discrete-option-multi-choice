@@ -106,7 +106,6 @@ export default class PanelList {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} Panel list DOM.
    */
   getDOM() {
@@ -115,7 +114,6 @@ export default class PanelList {
 
   /**
    * Show feedback.
-   *
    * @param {object} [params={}] Parameters.
    * @param {(boolean|null)[]} params.selected Selected answers.
    */
@@ -127,7 +125,6 @@ export default class PanelList {
 
   /**
    * Show results.
-   *
    * @param {H5P.Question.ScorePoints} [scorePoints] Score points.
    */
   showResults(scorePoints) {
@@ -165,7 +162,6 @@ export default class PanelList {
 
   /**
    * Handle user answered.
-   *
    * @param {number} index Index of answer option.
    * @param {boolean} userAnswer User answer.
    */
@@ -175,7 +171,6 @@ export default class PanelList {
 
   /**
    * Handle user changed confidence.
-   *
    * @param {number} index Index of answer option.
    * @param {boolean} confidenceIndex Confidence index.
    */
@@ -185,7 +180,6 @@ export default class PanelList {
 
   /**
    * Handle panel received focus.
-   *
    * @param {number} index Index of panel that got focus.
    */
   handlePanelGotFocus(index) {
@@ -194,7 +188,6 @@ export default class PanelList {
 
   /**
    * Show panel.
-   *
    * @param {number} index Index of panel to show.
    * @param {boolean} animate If true, animate.
    */
@@ -208,7 +201,6 @@ export default class PanelList {
 
   /**
    * Hide panel.
-   *
    * @param {number} index Index of panel to hide.
    */
   hidePanel(index) {
@@ -230,7 +222,6 @@ export default class PanelList {
 
   /**
    * Enable panel.
-   *
    * @param {number} index Index of panel to enable.
    */
   enablePanel(index) {
@@ -243,7 +234,6 @@ export default class PanelList {
 
   /**
    * Disable panel.
-   *
    * @param {number} index Index of panel to disable.
    */
   disablePanel(index) {
@@ -265,7 +255,6 @@ export default class PanelList {
 
   /**
    * Focus panel.
-   *
    * @param {number} index Index of panel to give focus to.
    * @param {boolean} [firstChild=false] If true, focus first child if possible.
    */
@@ -297,7 +286,6 @@ export default class PanelList {
 
   /**
    * Attach option.
-   *
    * @param {number} index Index of option to attach.
    * @param {boolean} animate If true, animate.
    */
@@ -314,7 +302,6 @@ export default class PanelList {
 
   /**
    * Determine whether panel exists.
-   *
    * @param {number} index Index of panel to check for.
    * @returns {boolean} True if panel exists. Else false.
    */
@@ -327,7 +314,6 @@ export default class PanelList {
 
   /**
    * Reset.
-   *
    * @param {object} [params={}] Parameters.
    */
   reset(params = {}) {
