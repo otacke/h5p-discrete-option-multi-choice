@@ -1,7 +1,7 @@
 {
   "name": "h5p-discrete-option-multi-choice",
   "version": "1.0.0",
-  "description": "Boilerplate for plain H5P content types (SNORDIAN style)",
+  "description": "Let students answer discrete option multiple choice questions",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
