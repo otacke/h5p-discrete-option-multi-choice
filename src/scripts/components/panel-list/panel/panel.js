@@ -39,28 +39,7 @@ export default class Panel {
     this.dom.setAttribute('aria-controls', optionUUID);
 
     this.dom.addEventListener('keydown', (event) => {
-      if (event.target !== this.dom) {
-        return; // Do not mess with childrens' listeners
-      }
-
-      if (event.code === 'Space' || event.key === 'Enter') {
-        if (this.isDisabled) {
-          Globals.get('read')(Dictionary.get('a11y.panelNotExpandable'));
-          return;
-        }
-
-        if (this.isExpanded) {
-          this.collapse();
-        }
-        else {
-          this.expand();
-        }
-      }
-      else {
-        return;
-      }
-
-      event.preventDefault();
+      this.handleKeydown(event);
     });
 
     this.dom.addEventListener('focus', () => {
@@ -232,5 +211,34 @@ export default class Panel {
 
     this.hideFeedback();
     this.option.reset({ previousState: params.previousState });
+  }
+
+  /**
+   * Handle keydown.
+   * @param {KeyboardEvent} event KeyboardEvent.
+   */
+  handleKeydown(event) {
+    if (event.target !== this.dom) {
+      return; // Do not mess with childrens' listeners
+    }
+
+    if (event.code === 'Space' || event.key === 'Enter') {
+      if (this.isDisabled) {
+        Globals.get('read')(Dictionary.get('a11y.panelNotExpandable'));
+        return;
+      }
+
+      if (this.isExpanded) {
+        this.collapse();
+      }
+      else {
+        this.expand();
+      }
+    }
+    else {
+      return;
+    }
+
+    event.preventDefault();
   }
 }

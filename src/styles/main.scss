@@ -35,3 +35,11 @@ $color-correct-shadow: #a2bdb0;
 $color-incorrect: #b71c1c;
 $color-incorrect-background: #fbd7d8;
 $color-incorrect-shadow: #deb8b8;
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}

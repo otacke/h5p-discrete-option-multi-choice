@@ -8,6 +8,8 @@ export default class CycleButton {
   /**
    * @class
    * @param {object} [params={}] Parameters.
+   * @param {object} [params.selector] Options for confidence selector.
+   * @param {number} [params.confidenceIndex] Index of chosen confidence option.
    * @param {object} [callbacks={}] Callbacks.
    * @param {function} [callbacks.onClicked] On clicked handler.
    * @param {function} [callbacks.onGotFocus] Panel element got gocus.
@@ -64,7 +66,7 @@ export default class CycleButton {
   }
 
   /**
-   * Select index.
+   * Select option.
    * @param {number} index Index of option to choose.
    */
   select(index) {
@@ -81,7 +83,10 @@ export default class CycleButton {
 
     this.selectedIndex = index;
     this.dom.innerHTML = this.params.selector.options[this.selectedIndex].label;
-    this.dom.setAttribute('aria-label', `Change confidence. Current value: ${this.params.selector.options[this.selectedIndex].value}`);
+    this.dom.setAttribute(
+      'aria-label',
+      `Change confidence. Current value: ${this.params.selector.options[this.selectedIndex].value}`
+    );
   }
 
   /**

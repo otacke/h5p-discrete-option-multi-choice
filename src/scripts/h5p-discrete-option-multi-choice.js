@@ -1,6 +1,8 @@
 import Util from '@services/util';
 import Dictionary from '@services/dictionary';
 import Globals from '@services/globals';
+import QuestionTypeContract from '@mixins/question-type-contract';
+import XAPI from '@mixins/xapi';
 import Main from '@components/main';
 import '@styles/h5p-discrete-option-multi-choice.scss';
 
@@ -13,6 +15,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    */
   constructor(params, contentId, extras = {}) {
     super('discrete-option-multi-choice');
+
+    Util.addMixins(DiscreteOptionMultiChoice, [QuestionTypeContract, XAPI]);
 
     // Sanitize parameters
     this.params = Util.extend({
@@ -283,6 +287,22 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       this.showButton('try-again');
     }
 
+    if (this.params.behaviour.showResults) {
+      const showScores = this.params.behaviour.mode === 'allOptions' &&
+        !this.params.behaviour.singlePoint;
+
+      this.content.showResults({ showScores: showScores });
+    }
+    else if (
+      Globals.get('params').behaviour.oneItemAtATime &&
+      !params.skipXAPI // Re-creating state, so not required again
+    ) {
+      this.content.appendResultsMessage();
+    }
+
+    // Ensure smooth display
+    this.trigger('resize');
+
     const textScore = H5P.Question.determineOverallFeedback(
       this.params.overallFeedback, this.getScore() / this.getMaxScore()
     );
@@ -299,19 +319,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       ariaMessage
     );
 
-    if (this.params.behaviour.showResults) {
-      const showScores = this.params.behaviour.mode === 'allOptions' &&
-        !this.params.behaviour.singlePoint;
-
-      this.content.showResults({ showScores: showScores });
-    }
-    else if (
-      Globals.get('params').behaviour.oneItemAtATime &&
-      !params.skipXAPI // Re-creating state, so not required again
-    ) {
-      this.content.appendResultsMessage();
-    }
-
     this.content.showFeedback();
 
     window.setTimeout(() => {
@@ -321,56 +328,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     if (!params.skipXAPI) {
       this.triggerXAPIEvent('answered');
     }
-  }
-
-  /**
-   * Check if result has been submitted or input has been given.
-   * @returns {boolean} True, if answer was given.
-   * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-1}
-   */
-  getAnswerGiven() {
-    return this.wasAnswerGiven;
-  }
-
-  /**
-   * Get latest score.
-   * @returns {number} latest score.
-   * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-2}
-   */
-  getScore() {
-    return Math.round(Math.max(0, Math.min(this.score, this.getMaxScore())));
-  }
-
-  /**
-   * Get maximum possible score.
-   * @returns {number} Score necessary for mastering.
-   * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-3}
-   */
-  getMaxScore() {
-    if (
-      this.params.behaviour.mode === 'standard' ||
-      this.params.behaviour.singlePoint
-    ) {
-      return 1;
-    }
-
-    const correctAnswersCount = this.params.answerOptions.length;
-
-    // If no answer is marked as correct, we still need 1 at least.
-    return Math.max(1, correctAnswersCount);
-  }
-
-  /**
-   * Show solutions.
-   * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-4}
-   */
-  showSolutions() {
-    this.hideButton('show-solution');
-    this.hideButton('try-again');
-
-    this.content.showAllPanels();
-    this.content.showFeedback();
-    this.content.showSolutions();
   }
 
   /**
@@ -397,25 +354,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
   }
 
   /**
-   * Reset task.
-   * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
-   */
-  resetTask() {
-    this.reset({ focus: true });
-  }
-
-  /**
-   * Get xAPI data.
-   * @returns {object} XAPI statement.
-   * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-6}
-   */
-  getXAPIData() {
-    const xAPIEvent = this.createXAPIEvent('answered');
-
-    return { statement: xAPIEvent.data.statement };
-  }
-
-  /**
    * Answer call to return the current state.
    * @returns {object} Current state.
    */
@@ -425,113 +363,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       currentAnswerIndex: this.currentAnswerIndex,
       viewState: this.viewState
     };
-  }
-
-  /**
-   * Trigger xAPI event.
-   * @param {string} verb Short id of the verb we want to trigger.
-   */
-  triggerXAPIEvent(verb) {
-    const xAPIEvent = this.createXAPIEvent(verb);
-    this.trigger(xAPIEvent);
-  }
-
-  /**
-   * Create an xAPI event.
-   * @param {string} verb Short id of the verb we want to trigger.
-   * @returns {H5P.XAPIEvent} Event template.
-   */
-  createXAPIEvent(verb) {
-    const xAPIEvent = this.createXAPIEventTemplate(verb);
-
-    Util.extend(
-      xAPIEvent.getVerifiedStatementValue(['object', 'definition']),
-      this.getXAPIDefinition()
-    );
-
-    if (verb === 'completed' || verb === 'answered') {
-      xAPIEvent.setScoredResult(
-        this.getScore(),
-        this.getMaxScore(),
-        this,
-        true,
-        this.getScore() === this.getMaxScore()
-      );
-
-      xAPIEvent.data.statement.result.response = this.content.getXAPIResponse();
-    }
-    else if (verb === 'progressed') {
-      xAPIEvent.data.statement.object.definition
-        .extensions['http://id.tincanapi.com/extension/ending-point'] =
-          this.currentAnswerIndex;
-    }
-
-    return xAPIEvent;
-  }
-
-  /**
-   * Get the xAPI definition for the xAPI object.
-   * @returns {object} XAPI definition.
-   */
-  getXAPIDefinition() {
-    const definition = {};
-
-    definition.name = {};
-    definition.name[this.languageTag] = this.getTitle();
-    // Fallback for h5p-php-reporting, expects en-US
-    definition.name['en-US'] = definition.name[this.languageTag];
-
-    definition.description = {};
-    definition.description[this.languageTag] = this.getDescription();
-    // Fallback for h5p-php-reporting, expects en-US
-    definition.description['en-US'] = definition.description[this.languageTag];
-
-    definition.type = 'http://adlnet.gov/expapi/activities/cmi.interaction';
-    definition.interactionType = 'choice';
-
-    definition.choices = this.content.getXAPIChoices();
-
-    if (this.languageTag !== 'en-US') {
-      definition.choices = definition.choices.map((choice) => {
-        choice.description[this.languageTag] = choice.description['en-US'];
-
-        choice.description['en-US'] =
-          choice.description['en-US']
-            .replace(/@correct/, 'correct')
-            .replace(/@incorrect/, 'incorrect');
-
-        choice.description[this.languageTag] =
-          choice.description[this.languageTag]
-            .replace(/@correct/, Dictionary.get('a11y.correct'))
-            .replace(/@incorrect/, Dictionary.get('a11y.incorrect'));
-
-        return choice;
-      });
-    }
-
-    definition.correctResponsesPattern =
-       this.content.getXAPICorrectResponsesPattern();
-
-    return definition;
-  }
-
-  /**
-   * Get task title.
-   * @returns {string} Title.
-   */
-  getTitle() {
-    return H5P.createTitle(
-      this.extras?.metadata?.title ||
-      DiscreteOptionMultiChoice.DEFAULT_DESCRIPTION
-    );
-  }
-
-  /**
-   * Get description.
-   * @returns {string} Description.
-   */
-  getDescription() {
-    return DiscreteOptionMultiChoice.DEFAULT_DESCRIPTION;
   }
 
   /**
@@ -559,10 +390,6 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     }
   }
 }
-
-/** @constant {string} DEFAULT_DESCRIPTION Default description */
-DiscreteOptionMultiChoice.DEFAULT_DESCRIPTION =
-  'Discrete Option Multiple Choice';
 
 /** @constant {object} view states */
 DiscreteOptionMultiChoice.VIEW_STATES = { task: 0, results: 1, solutions: 2 };

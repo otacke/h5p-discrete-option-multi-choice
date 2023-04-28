@@ -10,6 +10,7 @@ export default class PanelList {
   /**
    * @class
    * @param {object} [params={}] Parameters.
+   * @param {object[]} [params.options] Options for panels.
    * @param {object} [callbacks={}] Callbacks.
    * @param {function} [callbacks.onAnswered] Option was answered.
    */
@@ -34,58 +35,12 @@ export default class PanelList {
     this.dom = document.createElement('ul');
     this.dom.classList.add('h5p-discrete-option-multi-choice-panel-list');
     this.dom.addEventListener('keydown', (event) => {
-      if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
-        if (![...this.dom.childNodes].includes(event.target)) {
-          return; // Only care about panels
-        }
-
-        if (this.currentFocusPanel > 0) {
-          this.currentFocusPanel--;
-          this.focus(this.currentFocusPanel);
-        }
-      }
-      else if (event.code === 'ArrowDown' || event.code === 'ArrowRight') {
-        if (![...this.dom.childNodes].includes(event.target)) {
-          return; // Only care about panels
-        }
-
-        if (this.currentFocusPanel < this.dom.childNodes.length - 1) {
-          this.currentFocusPanel++;
-          this.focus(this.currentFocusPanel);
-        }
-      }
-      else if (event.code === 'Home') {
-        if (![...this.dom.childNodes].includes(event.target)) {
-          return; // Only care about panels
-        }
-
-        this.focus(0);
-      }
-      else if (event.code === 'End') {
-        if (![...this.dom.childNodes].includes(event.target)) {
-          return; // Only care about panels
-        }
-
-        this.focus(this.dom.childNodes.length - 1);
-      }
-      else if (event.code === 'Escape') {
-        this.panels.forEach((panel) => {
-          panel.collapse();
-        });
-        this.focus(this.currentFocusPanel);
-      }
-      else {
-        return;
-      }
-
-      event.preventDefault();
+      this.handleKeydown(event);
     });
 
     this.panels = params.options.map((option, index) => {
       return new Panel(
-        {
-          options: option
-        },
+        { options: option },
         {
           onAnswered: (score) => {
             this.handleAnswered(index, score);
@@ -154,10 +109,62 @@ export default class PanelList {
     this.panels.forEach((panel, index) => {
       // Mark expected answer option
       const markOptions = (this.params.options[index].correct) ?
-        ({ correct: true }) :
-        ({ incorrect: true });
+        { correct: true } :
+        { incorrect: true };
       panel.markOption(markOptions);
     });
+  }
+
+  /**
+   * Handle keydown. Implements recommended ARIA pattern
+   * @param {KeyboardEvent} event Keyboard event.
+   */
+  handleKeydown(event) {
+    if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
+      if (![...this.dom.childNodes].includes(event.target)) {
+        return; // Only care about panels
+      }
+
+      if (this.currentFocusPanel > 0) {
+        this.currentFocusPanel--;
+        this.focus(this.currentFocusPanel);
+      }
+    }
+    else if (event.code === 'ArrowDown' || event.code === 'ArrowRight') {
+      if (![...this.dom.childNodes].includes(event.target)) {
+        return; // Only care about panels
+      }
+
+      if (this.currentFocusPanel < this.dom.childNodes.length - 1) {
+        this.currentFocusPanel++;
+        this.focus(this.currentFocusPanel);
+      }
+    }
+    else if (event.code === 'Home') {
+      if (![...this.dom.childNodes].includes(event.target)) {
+        return; // Only care about panels
+      }
+
+      this.focus(0);
+    }
+    else if (event.code === 'End') {
+      if (![...this.dom.childNodes].includes(event.target)) {
+        return; // Only care about panels
+      }
+
+      this.focus(this.dom.childNodes.length - 1);
+    }
+    else if (event.code === 'Escape') {
+      this.panels.forEach((panel) => {
+        panel.collapse();
+      });
+      this.focus(this.currentFocusPanel);
+    }
+    else {
+      return;
+    }
+
+    event.preventDefault();
   }
 
   /**
@@ -212,7 +219,7 @@ export default class PanelList {
   }
 
   /**
-   * Show panel.
+   * Show all panels.
    */
   showAll() {
     for (let index = 0; index < this.panels.length; index++) {

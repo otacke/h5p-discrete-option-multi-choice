@@ -41,57 +41,52 @@ export default class Option {
 
     this.focusElements = [];
 
+    this.buildDOM();
+
+    this.updateAriaLabel();
+  }
+
+  /**
+   * Get DOM.
+   * @returns {HTMLElement} Option DOM.
+   */
+  getDOM() {
+    return this.dom;
+  }
+
+  /**
+   * BuildDOM.
+   */
+  buildDOM() {
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-discrete-option-multi-choice-option');
-    if (params.selector) {
+    if (this.params.selector) {
       this.dom.classList.add('has-confidence-selector');
     }
 
     this.dom.addEventListener('keydown', (event) => {
-      if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
-        const position = this.focusElements.indexOf(this.currentFocusElement);
-        if (position > 0) {
-          this.currentFocusElement = this.focusElements[position - 1];
-          this.currentFocusElement.focus();
-        }
-      }
-      else if (event.code === 'ArrowDown' || event.code === 'ArrowRight') {
-        const position = this.focusElements.indexOf(this.currentFocusElement);
-        if (position < this.focusElements.length - 1) {
-          this.currentFocusElement = this.focusElements[position + 1];
-          this.currentFocusElement.focus();
-        }
-      }
-      else if (event.code === 'Home') {
-        this.focusElements[0].focus();
-      }
-      else if (event.code === 'End') {
-        this.focusElements[this.focusElements.length - 1].focus();
-      }
-      else {
-        return;
-      }
-
-      event.preventDefault();
+      this.handleKeydown(event);
     });
 
     const text = document.createElement('div');
     text.classList.add('h5p-discrete-option-multi-choice-option-text');
-    text.innerHTML = params.text;
+    text.innerHTML = this.params.text;
     this.dom.append(text);
 
+    // Actions
     this.actions = document.createElement('div');
     this.actions.classList.add(
       'h5p-discrete-option-multi-choice-option-actions'
     );
-    this.actions.setAttribute('id', params.uuid);
+    this.actions.setAttribute('id', this.params.uuid);
     this.dom.append(this.actions);
 
-    if (params.selector) {
+    // Selector
+    if (this.params.selector) {
       this.confidenceSelector = new CycleButton(
         {
-          selector: params.selector,
-          confidenceIndex: params.confidenceIndex
+          selector: this.params.selector,
+          confidenceIndex: this.params.confidenceIndex
         },
         {
           onClicked: (confidenceIndex) => {
@@ -107,14 +102,13 @@ export default class Option {
       this.focusElements.push(this.confidenceSelector);
     }
 
+    // Choices
     const choices = document.createElement('div');
     choices.classList.add('h5p-discrete-option-multi-choice-choices');
     this.actions.append(choices);
 
     this.choiceCorrect = new OptionButton(
-      {
-        type: 'correct'
-      },
+      { type: 'correct' },
       {
         onClicked: () => {
           this.selected = this.choiceCorrect;
@@ -132,9 +126,7 @@ export default class Option {
     this.focusElements.push(this.choiceCorrect);
 
     this.choiceIncorrect = new OptionButton(
-      {
-        type: 'incorrect'
-      },
+      { type: 'incorrect' },
       {
         onClicked: () => {
           this.selected = this.choiceIncorrect;
@@ -150,16 +142,6 @@ export default class Option {
     );
     choices.append(this.choiceIncorrect.getDOM());
     this.focusElements.push(this.choiceIncorrect);
-
-    this.updateAriaLabel();
-  }
-
-  /**
-   * Get DOM.
-   * @returns {HTMLElement} Option DOM.
-   */
-  getDOM() {
-    return this.dom;
   }
 
   /**
@@ -243,7 +225,6 @@ export default class Option {
     }
 
     this.answeredCorrectly = correct;
-
     this.selected?.markAnswer(correct, scorePoints);
 
     this.updateAriaLabel();
@@ -258,8 +239,7 @@ export default class Option {
       this.choiceCorrect.markOption(params.correct);
       this.correctIsCorrect = true;
     }
-
-    if (typeof params.incorrect === 'boolean' || params.incorrect === null) {
+    else if (typeof params.incorrect === 'boolean' || params.incorrect === null) {
       this.choiceIncorrect.markOption(params.incorrect);
       this.correctIsCorrect = false;
     }
@@ -308,6 +288,7 @@ export default class Option {
   /**
    * Reset.
    * @param {object} [params={}] Parameters.
+   * @param {object} [params.previousState] Previous state.
    */
   reset(params = {}) {
     this.answeredCorrectly = null;
@@ -333,5 +314,37 @@ export default class Option {
     }
 
     this.updateAriaLabel();
+  }
+
+  /**
+   * Handle keydown.
+   * @param {KeyboardEvent} event Keyboard event.
+   */
+  handleKeydown(event) {
+    if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
+      const position = this.focusElements.indexOf(this.currentFocusElement);
+      if (position > 0) {
+        this.currentFocusElement = this.focusElements[position - 1];
+        this.currentFocusElement.focus();
+      }
+    }
+    else if (event.code === 'ArrowDown' || event.code === 'ArrowRight') {
+      const position = this.focusElements.indexOf(this.currentFocusElement);
+      if (position < this.focusElements.length - 1) {
+        this.currentFocusElement = this.focusElements[position + 1];
+        this.currentFocusElement.focus();
+      }
+    }
+    else if (event.code === 'Home') {
+      this.focusElements[0].focus();
+    }
+    else if (event.code === 'End') {
+      this.focusElements[this.focusElements.length - 1].focus();
+    }
+    else {
+      return;
+    }
+
+    event.preventDefault();
   }
 }
