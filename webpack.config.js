@@ -2,11 +2,11 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-const nodeEnv = process.env.NODE_ENV || 'development';
-const libraryName = process.env.npm_package_name;
+const mode = process.argv.includes('--mode=production') ?
+  'production' : 'development';const libraryName = process.env.npm_package_name;
 
 module.exports = {
-  mode: nodeEnv,
+  mode: mode,
   resolve: {
     alias: {
       '@components': path.resolve(__dirname, 'src/scripts/components'),
@@ -16,7 +16,7 @@ module.exports = {
     }
   },
   optimization: {
-    minimize: nodeEnv === 'production',
+    minimize: mode === 'production',
     minimizer: [
       new TerserPlugin({
         terserOptions: {
@@ -37,7 +37,8 @@ module.exports = {
   },
   output: {
     filename: `${libraryName}.js`,
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    clean: true
   },
   target: ['browserslist'],
   module: {
@@ -79,5 +80,5 @@ module.exports = {
   stats: {
     colors: true
   },
-  ...(nodeEnv !== 'production' && { devtool: 'eval-cheap-module-source-map' })
+  ...(mode !== 'production' && { devtool: 'eval-cheap-module-source-map' })
 };
