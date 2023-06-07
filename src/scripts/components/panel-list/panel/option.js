@@ -10,12 +10,12 @@ import './option.scss';
 export default class Option {
   /**
    * @class
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {boolean} params.correct True, if option is correct.
    * @param {string} params.labelUUID UUID for text HTML element
    * @param {string} params.text Text for option.
    * @param {object} [params.selector] Selector configuration.
-   * @param {object} [callbacks={}] Callbacks.
+   * @param {object} [callbacks] Callbacks.
    * @param {function} [callbacks.onAnswered] Option was answered.
    * @param {function} [callbacks.onConfidenceChanged] Confidence changed.
    * @param {function} [callbacks.onGotFocus] Panel element got gocus.
@@ -232,7 +232,7 @@ export default class Option {
 
   /**
    * Mark option as the correct solution.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    */
   markOption(params = {}) {
     if (typeof params.correct === 'boolean' || params.correct === null) {
@@ -287,7 +287,7 @@ export default class Option {
 
   /**
    * Reset.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {object} [params.previousState] Previous state.
    */
   reset(params = {}) {

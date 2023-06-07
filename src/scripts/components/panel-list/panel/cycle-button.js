@@ -7,10 +7,10 @@ import './cycle-button.scss';
 export default class CycleButton {
   /**
    * @class
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {object} [params.selector] Options for confidence selector.
    * @param {number} [params.confidenceIndex] Index of chosen confidence option.
-   * @param {object} [callbacks={}] Callbacks.
+   * @param {object} [callbacks] Callbacks.
    * @param {function} [callbacks.onClicked] On clicked handler.
    * @param {function} [callbacks.onGotFocus] Panel element got gocus.
    */

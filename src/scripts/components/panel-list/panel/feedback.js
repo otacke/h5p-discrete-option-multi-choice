@@ -7,9 +7,9 @@ import './feedback.scss';
 export default class Feedback {
   /**
    * @class
-   * @param {object} [params={}] Parameters.
-   * @param {string} [params.chosenFeedback=''] Feedback when selected 'correct'.
-   * @param {string} [params.notChosenFeedback=''] Feedback when selected 'incorrect'.
+   * @param {object} [params] Parameters.
+   * @param {string} [params.chosenFeedback] Feedback when selected 'correct'.
+   * @param {string} [params.notChosenFeedback] Feedback when selected 'incorrect'.
    */
   constructor(params = {}) {
     this.params = Util.extend({

@@ -268,9 +268,9 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Handle game over.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {boolean} [params.skipXAPI] If true, skip xapi.
-   * @param {boolean} [params.quiet=true] If false, announce game over.
+   * @param {boolean} [params.quiet] If false, announce game over.
    */
   handleGameOver(params = {}) {
     if (!params.quiet) {
@@ -332,7 +332,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Reset.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    */
   reset(params = {}) {
     this.score = 0;

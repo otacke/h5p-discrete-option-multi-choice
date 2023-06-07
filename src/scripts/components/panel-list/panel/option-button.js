@@ -8,8 +8,8 @@ import './option-button.scss';
 export default class OptionButton {
   /**
    * @class
-   * @param {object} [params={}] Parameters.
-   * @param {object} [callbacks={}] Callbacks.
+   * @param {object} [params] Parameters.
+   * @param {object} [callbacks] Callbacks.
    * @param {function} [callbacks.onClicked] Called on button clicked.
    * @param {function} [callbacks.onGotFocus] Panel element got gocus.
    */

@@ -11,9 +11,9 @@ import './panel.scss';
 export default class Panel {
   /**
    * @class
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {object} params.options Answer options.
-   * @param {object} [callbacks={}] Callbacks.
+   * @param {object} [callbacks] Callbacks.
    * @param {function} [callbacks.onAnswered] Option was answered.
    * @param {function} [callbacks.onConfidenceChanged] Confidence changed.
    * @param {function} [callbacks.onGotFocus] Panel element got gocus.
@@ -92,7 +92,7 @@ export default class Panel {
 
   /**
    * Focus option.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {boolean} [params.firstChild] If true, try to focus first child.
    */
   focus(params = {}) {
@@ -106,7 +106,7 @@ export default class Panel {
 
   /**
    * Show feedback.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {boolean|null} params.selected Selected option.
    */
   showFeedback(params = {}) {
@@ -135,7 +135,7 @@ export default class Panel {
 
   /**
    * Mark option.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    */
   markOption(params = {}) {
     this.option.markOption(params);
@@ -161,7 +161,7 @@ export default class Panel {
 
   /**
    * Show.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {boolean} [params.animate] If true, animate.
    */
   show(params = {}) {
@@ -202,7 +202,7 @@ export default class Panel {
 
   /**
    * Reset.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    */
   reset(params = {}) {
     params = Util.extend({

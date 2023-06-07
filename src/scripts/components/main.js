@@ -9,8 +9,8 @@ import PanelList from '@components/panel-list/panel-list';
 export default class Main {
   /**
    * @class
-   * @param {object} [params={}] Parameters.
-   * @param {object} [callbacks={}] Callbacks.
+   * @param {object} [params] Parameters.
+   * @param {object} [callbacks] Callbacks.
    * @param {function} [callbacks.onAnswerGiven] User gave answer.
    * @param {function} [callbacks.onGameOver] Game is over.
    */
@@ -62,11 +62,11 @@ export default class Main {
 
   /**
    * Handle user answered true/false for an option.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {number} params.index Index of the option.
    * @param {boolean} params.userAnswer Answer given by user.
-   * @param {boolean} [params.quiet=true] If false, announce change.
-   * @param {boolean} [params.focus=false] If true, focus next panel.
+   * @param {boolean} [params.quiet] If false, announce change.
+   * @param {boolean} [params.focus] If true, focus next panel.
    */
   handleAnswered(params = {}) {
     params.quiet = params.quiet ?? true;
@@ -161,7 +161,7 @@ export default class Main {
 
   /**
    * Show results.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    */
   showResults(params = {}) {
     this.panelList.showAll();
@@ -213,7 +213,7 @@ export default class Main {
 
   /**
    * Reset.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    */
   reset(params = {}) {
     params = Util.extend({

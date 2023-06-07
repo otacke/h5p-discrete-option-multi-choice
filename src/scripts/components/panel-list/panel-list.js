@@ -9,9 +9,9 @@ import './panel-list.scss';
 export default class PanelList {
   /**
    * @class
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {object[]} [params.options] Options for panels.
-   * @param {object} [callbacks={}] Callbacks.
+   * @param {object} [callbacks] Callbacks.
    * @param {function} [callbacks.onAnswered] Option was answered.
    */
   constructor(params = {}, callbacks = {}) {
@@ -69,7 +69,7 @@ export default class PanelList {
 
   /**
    * Show feedback.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    * @param {(boolean|null)[]} params.selected Selected answers.
    */
   showFeedback(params = {}) {
@@ -263,7 +263,7 @@ export default class PanelList {
   /**
    * Focus panel.
    * @param {number} index Index of panel to give focus to.
-   * @param {boolean} [firstChild=false] If true, focus first child if possible.
+   * @param {boolean} [firstChild] If true, focus first child if possible.
    */
   focus(index, firstChild = false) {
     if (!this.panelExists(index)) {
@@ -321,7 +321,7 @@ export default class PanelList {
 
   /**
    * Reset.
-   * @param {object} [params={}] Parameters.
+   * @param {object} [params] Parameters.
    */
   reset(params = {}) {
     params = Util.extend({
