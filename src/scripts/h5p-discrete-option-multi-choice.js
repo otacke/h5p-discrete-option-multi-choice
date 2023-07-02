@@ -70,14 +70,16 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.extras = extras;
 
     // Fill dictionary
-    Dictionary.fill({ l10n: this.params.l10n, a11y: this.params.a11y });
+    this.dictionary = new Dictionary();
+    this.dictionary.fill({ l10n: this.params.l10n, a11y: this.params.a11y });
 
     // Set globals
-    Globals.set('params', this.params);
-    Globals.set('resize', () => {
+    this.globals = new Globals();
+    this.globals.set('params', this.params);
+    this.globals.set('resize', () => {
       this.trigger('resize');
     });
-    Globals.set('read', (text) => {
+    this.globals.set('read', (text) => {
       this.read(text);
     });
 
@@ -88,7 +90,10 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
     // Build content
     this.content = new Main(
-      {},
+      {
+        dictionary: this.dictionary,
+        globals: this.globals
+      },
       {
         onAnswerGiven: (scoreDelta, skipXAPI) => {
           this.handleAnswerGiven(scoreDelta, skipXAPI);
@@ -189,35 +194,35 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     // Just to ensure that H5P.QuestionSet finds one - may not be necessary
     this.addButton(
       'check-answer',
-      Dictionary.get('l10n.check'),
+      this.dictionary.get('l10n.check'),
       () => {},
       this.params.behaviour.enableCheckButton,
-      { 'aria-label': Dictionary.get('a11y.check') },
+      { 'aria-label': this.dictionary.get('a11y.check') },
       {
         contentData: this.contentData,
-        textIfSubmitting: Dictionary.get('l10n.submit'),
+        textIfSubmitting: this.dictionary.get('l10n.submit'),
       }
     );
 
     this.addButton(
       'show-solution',
-      Dictionary.get('l10n.showSolution'),
+      this.dictionary.get('l10n.showSolution'),
       () => {
         this.handleShowSolutions();
       },
       false,
-      { 'aria-label': Dictionary.get('a11y.showSolution') },
+      { 'aria-label': this.dictionary.get('a11y.showSolution') },
       {}
     );
 
     this.addButton(
       'try-again',
-      Dictionary.get('l10n.retry'),
+      this.dictionary.get('l10n.retry'),
       () => {
         this.handleRetry();
       },
       false,
-      { 'aria-label': Dictionary.get('a11y.retry') },
+      { 'aria-label': this.dictionary.get('a11y.retry') },
       {}
     );
   }
@@ -276,7 +281,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
    */
   handleGameOver(params = {}) {
     if (!params.quiet) {
-      this.read(Dictionary.get('a11y.allAnswered'));
+      this.read(this.dictionary.get('a11y.allAnswered'));
     }
 
     this.setViewState('results');
@@ -296,7 +301,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       this.content.showResults({ showScores: showScores });
     }
     else if (
-      Globals.get('params').behaviour.oneItemAtATime &&
+      this.globals.get('params').behaviour.oneItemAtATime &&
       !params.skipXAPI // Re-creating state, so not required again
     ) {
       this.content.appendResultsMessage();

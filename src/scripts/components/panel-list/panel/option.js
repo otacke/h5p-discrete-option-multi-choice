@@ -1,4 +1,3 @@
-import Dictionary from '@services/dictionary';
 import Util from '@services/util';
 import OptionButton from './option-button';
 import CycleButton from './cycle-button';
@@ -21,7 +20,7 @@ export default class Option {
    * @param {function} [callbacks.onGotFocus] Panel element got gocus.
    */
   constructor(params = {}, callbacks = {}) {
-    this.params = params;
+    this.params = Util.extend({}, params);
 
     this.ariaLabelText = Util.stripHTML(this.params.text);
     this.ariaLabelText =
@@ -108,7 +107,10 @@ export default class Option {
     this.actions.append(choices);
 
     this.choiceCorrect = new OptionButton(
-      { type: 'correct' },
+      {
+        dictionary: this.params.dictionary,
+        type: 'correct'
+      },
       {
         onClicked: () => {
           this.selected = this.choiceCorrect;
@@ -126,7 +128,10 @@ export default class Option {
     this.focusElements.push(this.choiceCorrect);
 
     this.choiceIncorrect = new OptionButton(
-      { type: 'incorrect' },
+      {
+        dictionary: this.params.dictionary,
+        type: 'incorrect'
+      },
       {
         onClicked: () => {
           this.selected = this.choiceIncorrect;
@@ -153,31 +158,35 @@ export default class Option {
     if (this.isDisabled) {
       if (this.selected === this.choiceCorrect) {
         labelSegments.push(
-          Dictionary.get('a11y.youMarkedThisAs')
-            .replace(/@correctness/, Dictionary.get('a11y.correct'))
+          this.params.dictionary
+            .get('a11y.youMarkedThisAs')
+            .replace(/@correctness/, this.params.dictionary.get('a11y.correct'))
         );
       }
       else if (this.selected === this.choiceIncorrect) {
         labelSegments.push(
-          Dictionary.get('a11y.youMarkedThisAs')
-            .replace(/@correctness/, Dictionary.get('a11y.incorrect'))
+          this.params.dictionary
+            .get('a11y.youMarkedThisAs')
+            .replace(
+              /@correctness/, this.params.dictionary.get('a11y.incorrect')
+            )
         );
       }
 
       if (this.confidenceSelector) {
         labelSegments.push(
-          Dictionary.get('a11y.confidenceAt')
+          this.params.dictionary.get('a11y.confidenceAt')
             .replace(/@value/, this.confidenceSelector.getCurrentValue())
         );
       }
 
       if (typeof this.answeredCorrectly === 'boolean') {
         const correctness = this.answeredCorrectly ?
-          Dictionary.get('a11y.correct') :
-          Dictionary.get('a11y.incorrect');
+          this.params.dictionary.get('a11y.correct') :
+          this.params.dictionary.get('a11y.incorrect');
 
         labelSegments.push(
-          Dictionary.get('a11y.yourAnswerWas')
+          this.params.dictionary.get('a11y.yourAnswerWas')
             .replace(/@correctness/, correctness)
         );
       }
@@ -187,21 +196,25 @@ export default class Option {
         this.answeredCorrectly === false
       ) {
         const correctness = this.correctIsCorrect ?
-          Dictionary.get('a11y.correct') :
-          Dictionary.get('a11y.incorrect');
+          this.params.dictionary.get('a11y.correct') :
+          this.params.dictionary.get('a11y.incorrect');
 
         labelSegments.push(
-          Dictionary.get('a11y.correctAnswerWas')
+          this.params.dictionary.get('a11y.correctAnswerWas')
             .replace(/@correctness/, correctness)
         );
       }
     }
     else {
       if (this.confidenceSelector) {
-        labelSegments.push(Dictionary.get('a11y.taskConfidenceMark'));
+        labelSegments.push(
+          this.params.dictionary.get('a11y.taskConfidenceMark')
+        );
       }
       else {
-        labelSegments.push(Dictionary.get('a11y.taskMark'));
+        labelSegments.push(
+          this.params.dictionary.get('a11y.taskMark')
+        );
       }
     }
 
@@ -239,7 +252,10 @@ export default class Option {
       this.choiceCorrect.markOption(params.correct);
       this.correctIsCorrect = true;
     }
-    else if (typeof params.incorrect === 'boolean' || params.incorrect === null) {
+    else if (
+      typeof params.incorrect === 'boolean' ||
+      params.incorrect === null
+    ) {
       this.choiceIncorrect.markOption(params.incorrect);
       this.correctIsCorrect = false;
     }

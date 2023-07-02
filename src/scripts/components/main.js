@@ -1,5 +1,3 @@
-import Dictionary from '@services/dictionary';
-import Globals from '@services/globals';
 import Util from '@services/util';
 import PanelList from '@components/panel-list/panel-list';
 
@@ -26,9 +24,10 @@ export default class Main {
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-discrete-option-multi-choice-main');
 
-    this.answerOptionsParams = Globals.get('params').answerOptions;
-    this.mode = Globals.get('params').behaviour.mode;
-    this.confidenceLevels = Globals.get('params').behaviour.confidenceLevels
+    this.answerOptionsParams = this.params.globals.get('params').answerOptions;
+    this.mode = this.params.globals.get('params').behaviour.mode;
+    this.confidenceLevels = this.params.globals
+      .get('params').behaviour.confidenceLevels
       .split(',')
       .map((level) => parseInt(level) / 100);
 
@@ -73,7 +72,7 @@ export default class Main {
 
     this.panelList.disablePanel(this.currentPanelIndex);
 
-    if (Globals.get('params').behaviour.oneItemAtATime) {
+    if (this.params.globals.get('params').behaviour.oneItemAtATime) {
       this.panelList.hidePanel(this.currentPanelIndex);
     }
 
@@ -144,11 +143,11 @@ export default class Main {
 
     if (!params.quiet) {
       const message = Util.stripHTML(
-        Dictionary.get('a11y.panelAdded')
+        this.params.dictionary.get('a11y.panelAdded')
           .replace(/@option/, this.answerOptions[this.currentPanelIndex].text)
       );
 
-      Globals.get('read')(message);
+      this.params.globals.get('read')(message);
     }
 
     // Focus first option of next panel
@@ -205,8 +204,12 @@ export default class Main {
    */
   appendResultsMessage() {
     this.resultsMessage = document.createElement('p');
-    this.resultsMessage.classList.add('h5p-discrete-option-multi-choice-message');
-    this.resultsMessage.innerText = Dictionary.get('l10n.yourResults');
+    this.resultsMessage.classList.add(
+      'h5p-discrete-option-multi-choice-message'
+    );
+    this.resultsMessage.innerText = this.params.dictionary.get(
+      'l10n.yourResults'
+    );
 
     this.dom.append(this.resultsMessage);
   }
@@ -226,7 +229,7 @@ export default class Main {
 
     this.isOvertime = false;
 
-    const behavior = Globals.get('params').behaviour;
+    const behavior = this.params.globals.get('params').behaviour;
 
     // Set order of answer options
     this.order = params.previousState.order ??
@@ -274,6 +277,8 @@ export default class Main {
 
     this.panelList = new PanelList(
       {
+        dictionary: this.params.dictionary,
+        globals: this.params.globals,
         options: this.answerOptions
       },
       {

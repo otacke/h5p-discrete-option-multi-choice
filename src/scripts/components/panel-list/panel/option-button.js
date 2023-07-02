@@ -1,4 +1,3 @@
-import Dictionary from '@services/dictionary';
 import Util from '@services/util';
 import './option-button.scss';
 
@@ -14,8 +13,7 @@ export default class OptionButton {
    * @param {function} [callbacks.onGotFocus] Panel element got gocus.
    */
   constructor(params = {}, callbacks = {}) {
-    this.params = Util.extend({
-    }, params);
+    this.params = Util.extend({}, params);
 
     this.callbacks = Util.extend({
       onClicked: () => {},
@@ -27,8 +25,11 @@ export default class OptionButton {
     this.dom.classList.add(this.params.type);
     this.dom.setAttribute(
       'aria-label',
-      Dictionary.get('a11y.markAnswerAs')
-        .replace(/@status/, Dictionary.get('a11y.' + this.params.type))
+      this.params.dictionary
+        .get('a11y.markAnswerAs')
+        .replace(
+          /@status/, this.params.dictionary.get('a11y.' + this.params.type)
+        )
     );
     this.dom.setAttribute('disabled', 'disabled');
 

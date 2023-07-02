@@ -1,5 +1,3 @@
-import Dictionary from '@services/dictionary';
-import Globals from '@services/globals';
 import Util from '@services/util';
 import Option from './option';
 import Feedback from './feedback';
@@ -19,6 +17,8 @@ export default class Panel {
    * @param {function} [callbacks.onGotFocus] Panel element got gocus.
    */
   constructor(params = {}, callbacks = {}) {
+    this.params = Util.extend({}, params);
+
     this.callbacks = Util.extend({
       onAnswered: () => {},
       onConfidenceChanged: () => {},
@@ -52,6 +52,7 @@ export default class Panel {
 
     this.option = new Option(
       {
+        dictionary: this.params.dictionary,
         uuid: optionUUID,
         text: params.options.text,
         correct: params.options.correct,
@@ -224,7 +225,9 @@ export default class Panel {
 
     if (event.code === 'Space' || event.key === 'Enter') {
       if (this.isDisabled) {
-        Globals.get('read')(Dictionary.get('a11y.panelNotExpandable'));
+        this.params.globals.get('read')(
+          this.params.dictionary.get('a11y.panelNotExpandable')
+        );
         return;
       }
 

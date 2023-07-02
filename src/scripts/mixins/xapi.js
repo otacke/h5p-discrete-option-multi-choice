@@ -1,5 +1,4 @@
 import Util from '@services/util';
-import Dictionary from '@services/dictionary';
 
 /**
  * Mixin containing methods for xapi stuff.
@@ -80,8 +79,8 @@ export default class XAPI {
 
         choice.description[this.languageTag] =
           choice.description[this.languageTag]
-            .replace(/@correct/, Dictionary.get('a11y.correct'))
-            .replace(/@incorrect/, Dictionary.get('a11y.incorrect'));
+            .replace(/@correct/, this.dictionary.get('a11y.correct'))
+            .replace(/@incorrect/, this.dictionary.get('a11y.incorrect'));
 
         return choice;
       });

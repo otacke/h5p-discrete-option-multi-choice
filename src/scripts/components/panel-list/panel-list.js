@@ -1,4 +1,3 @@
-import Globals from '@services/globals';
 import Util from '@services/util';
 import Panel from '@components/panel-list/panel/panel';
 import './panel-list.scss';
@@ -40,7 +39,10 @@ export default class PanelList {
 
     this.panels = params.options.map((option, index) => {
       return new Panel(
-        { options: option },
+        {
+          dictionary: this.params.dictionary,
+          options: option
+        },
         {
           onAnswered: (score) => {
             this.handleAnswered(index, score);
@@ -288,7 +290,7 @@ export default class PanelList {
       this.panels[index].disable();
     });
 
-    Globals.get('resize')();
+    this.params.globals.get('resize')();
   }
 
   /**
@@ -304,7 +306,7 @@ export default class PanelList {
     this.dom.append(this.panels[index].getDOM());
     this.showPanel(index, animate);
 
-    Globals.get('resize')();
+    this.params.globals.get('resize')();
   }
 
   /**
