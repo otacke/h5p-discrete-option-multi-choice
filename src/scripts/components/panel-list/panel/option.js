@@ -1,6 +1,6 @@
-import Util from '@services/util';
-import OptionButton from './option-button';
-import CycleButton from './cycle-button';
+import Util from '@services/util.js';
+import OptionButton from './option-button.js';
+import CycleButton from './cycle-button.js';
 import './option.scss';
 
 /**

@@ -1,9 +1,9 @@
-import Util from '@services/util';
-import Dictionary from '@services/dictionary';
-import Globals from '@services/globals';
-import QuestionTypeContract from '@mixins/question-type-contract';
-import XAPI from '@mixins/xapi';
-import Main from '@components/main';
+import Util from '@services/util.js';
+import Dictionary from '@services/dictionary.js';
+import Globals from '@services/globals.js';
+import QuestionTypeContract from '@mixins/question-type-contract.js';
+import XAPI from '@mixins/xapi.js';
+import Main from '@components/main.js';
 import '@styles/h5p-discrete-option-multi-choice.scss';
 
 export default class DiscreteOptionMultiChoice extends H5P.Question {

@@ -1,6 +1,6 @@
-import Util from '@services/util';
-import Option from './option';
-import Feedback from './feedback';
+import Util from '@services/util.js';
+import Option from './option.js';
+import Feedback from './feedback.js';
 import './panel.scss';
 
 /**

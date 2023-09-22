@@ -1,5 +1,5 @@
-import Util from '@services/util';
-import Panel from '@components/panel-list/panel/panel';
+import Util from '@services/util.js';
+import Panel from '@components/panel-list/panel/panel.js';
 import './panel-list.scss';
 
 /**

@@ -1,5 +1,5 @@
-import Util from '@services/util';
-import PanelList from '@components/panel-list/panel-list';
+import Util from '@services/util.js';
+import PanelList from '@components/panel-list/panel-list.js';
 
 /**
  * Main DOM component incl. main controller.
