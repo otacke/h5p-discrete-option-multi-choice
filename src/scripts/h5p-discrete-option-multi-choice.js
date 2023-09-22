@@ -362,9 +362,13 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
   /**
    * Answer call to return the current state.
-   * @returns {object} Current state.
+   * @returns {object|undefined} Current state.
    */
   getCurrentState() {
+    if (!this.getAnswerGiven()) {
+      return;
+    }
+
     return {
       content: this.content.getCurrentState(),
       currentAnswerIndex: this.currentAnswerIndex,
