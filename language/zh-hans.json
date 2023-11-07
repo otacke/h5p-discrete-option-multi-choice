@@ -21,6 +21,9 @@
       "widgets": [
         {
           "label": "默认"
+        },
+        {
+          "label": "Textual"
         }
       ],
       "field": {

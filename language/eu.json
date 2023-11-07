@@ -20,7 +20,10 @@
       "entity": "option",
       "widgets": [
         {
-          "label": "Default"
+          "label": "Lehenetsitakoa"
+        },
+        {
+          "label": "Testuala"
         }
       ],
       "field": {

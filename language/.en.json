@@ -21,6 +21,9 @@
       "widgets": [
         {
           "label": "Default"
+        },
+        {
+          "label": "Textual"
         }
       ],
       "field": {

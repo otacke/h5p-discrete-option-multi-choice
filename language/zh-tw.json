@@ -20,7 +20,10 @@
       "entity": "選項",
       "widgets": [
         {
-          "label": "默認"
+          "label": "預設值"
+        },
+        {
+          "label": "文字方式"
         }
       ],
       "field": {

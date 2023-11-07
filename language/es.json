@@ -21,6 +21,9 @@
       "widgets": [
         {
           "label": "Por defecto"
+        },
+        {
+          "label": "Textual"
         }
       ],
       "field": {

@@ -20,7 +20,10 @@
       "entity": "选项",
       "widgets": [
         {
-          "label": "默认"
+          "label": "視覺模式"
+        },
+        {
+          "label": "文字模式"
         }
       ],
       "field": {
