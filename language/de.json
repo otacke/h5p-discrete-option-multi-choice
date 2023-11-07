@@ -20,7 +20,10 @@
       "entity": "Option",
       "widgets": [
         {
-          "label": "Voreinstellung"
+          "label": "Eingabemaske"
+        },
+        {
+          "label": "Als Text eingeben"
         }
       ],
       "field": {
@@ -48,7 +51,7 @@
         ]
       }
     },
-{
+    {
       "label": "Gesamtrückmeldung",
       "fields": [
         {

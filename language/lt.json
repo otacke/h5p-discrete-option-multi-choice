@@ -21,6 +21,9 @@
       "widgets": [
         {
           "label": "Numatytasis"
+        },
+        {
+          "label": "Tekstinis"
         }
       ],
       "field": {

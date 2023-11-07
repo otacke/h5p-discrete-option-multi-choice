@@ -78,6 +78,10 @@
       {
         "name": "VerticalTabs",
         "label": "Default"
+      },
+      {
+        "name": "DiscreteOptionMultiChoiceTextualEditor",
+        "label": "Textual"
       }
     ],
     "field": {
