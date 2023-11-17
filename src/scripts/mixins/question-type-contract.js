@@ -57,7 +57,6 @@ export default class QuestionTypeContract {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
    */
   resetTask() {
-    this.contentWasReset = true;
     this.reset({ focus: true });
   }
 
@@ -70,5 +69,23 @@ export default class QuestionTypeContract {
     const xAPIEvent = this.createXAPIEvent('answered');
 
     return { statement: xAPIEvent.data.statement };
+  }
+
+  /**
+   * Answer call to return the current state.
+   * @returns {object|undefined} Current state.
+   * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-7}
+   */
+  getCurrentState() {
+    if (!this.getAnswerGiven()) {
+      // Nothing relevant to store, but previous state in DB must be cleared after reset
+      return this.contentWasReset ? {} : undefined;
+    }
+
+    return {
+      content: this.content.getCurrentState(),
+      currentAnswerIndex: this.currentAnswerIndex,
+      viewState: this.viewState
+    };
   }
 }

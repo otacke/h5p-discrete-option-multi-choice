@@ -155,14 +155,14 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
     if (
       this.previousState.viewState ===
-      DiscreteOptionMultiChoice.VIEW_STATES['results'] &&
-      this.viewState !== DiscreteOptionMultiChoice.VIEW_STATES['results']
+      VIEW_STATES['results'] &&
+      this.viewState !== VIEW_STATES['results']
     ) {
       this.handleGameOver({ skipXAPI: true });
     }
     else if (
       this.previousState.viewState ===
-      DiscreteOptionMultiChoice.VIEW_STATES['solutions']
+      VIEW_STATES['solutions']
     ) {
       this.handleGameOver({ skipXAPI: true });
       this.handleShowSolutions();
@@ -177,6 +177,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       this.observer = this.observer || new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           this.observer.disconnect();
+          this.content.toggleIntroductionVisibility();
           this.trigger('resize');
         }
       }, {
@@ -345,6 +346,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.score = 0;
     this.currentAnswerIndex = 1;
     this.wasAnswerGiven = false;
+    this.contentWasReset = true;
 
     this.content.reset({
       previousState: params.previousState ?? {},
@@ -361,47 +363,29 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
   }
 
   /**
-   * Answer call to return the current state.
-   * @returns {object|undefined} Current state.
-   */
-  getCurrentState() {
-    if (!this.getAnswerGiven()) {
-      // Nothing relevant to store, but previous state in DB must be cleared after reset
-      return this.contentWasReset ? {} : undefined;
-    }
-
-    return {
-      content: this.content.getCurrentState(),
-      currentAnswerIndex: this.currentAnswerIndex,
-      viewState: this.viewState
-    };
-  }
-
-  /**
    * Set view state.
    * @param {string|number} state State to be set.
    */
   setViewState(state) {
     if (
       typeof state === 'string' &&
-      DiscreteOptionMultiChoice.VIEW_STATES[state] !== undefined
+      VIEW_STATES[state] !== undefined
     ) {
-      this.viewState = DiscreteOptionMultiChoice.VIEW_STATES[state];
+      this.viewState = VIEW_STATES[state];
     }
     else if (
       typeof state === 'number' &&
-      Object.values(DiscreteOptionMultiChoice.VIEW_STATES).includes(state)
+      Object.values(VIEW_STATES).includes(state)
     ) {
       this.viewState = state;
-
-      this.content.setViewState(
-        DiscreteOptionMultiChoice.VIEW_STATES
-          .find((value) => value === state)
-          .keys[0]
-      );
     }
+    else {
+      return;
+    }
+
+    this.content.setViewState(this.viewState);
   }
 }
 
 /** @constant {object} view states */
-DiscreteOptionMultiChoice.VIEW_STATES = { task: 0, results: 1, solutions: 2 };
+export const VIEW_STATES = { task: 0, results: 1, solutions: 2 };

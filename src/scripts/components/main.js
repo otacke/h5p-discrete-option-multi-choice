@@ -1,5 +1,6 @@
 import Util from '@services/util.js';
 import PanelList from '@components/panel-list/panel-list.js';
+import { VIEW_STATES } from '@scripts/h5p-discrete-option-multi-choice';
 
 /**
  * Main DOM component incl. main controller.
@@ -212,6 +213,47 @@ export default class Main {
     );
 
     this.dom.append(this.resultsMessage);
+  }
+
+  /**
+   * Set view state.
+   * @param {string|number} state State to be set.
+   */
+  setViewState(state) {
+    if (
+      typeof state === 'string' &&
+      VIEW_STATES[state] !== undefined
+    ) {
+      this.viewState = VIEW_STATES[state];
+    }
+    else if (
+      typeof state === 'number' &&
+      Object.values(VIEW_STATES).includes(state)
+    ) {
+      this.viewState = state;
+    }
+    else {
+      return;
+    }
+
+    this.toggleIntroductionVisibility();
+  }
+
+  /**
+   * Toggle visibility of introduction.
+   * @param {boolean} [state] State to set.
+   */
+  toggleIntroductionVisibility(state) {
+    if (typeof state !== 'boolean') {
+      // Hide introduction if showing results
+      state = Object.entries(VIEW_STATES).find((pair) => {
+        return pair[1] === this.viewState;
+      })[0] === 'results';
+    }
+
+    this.dom.closest('.h5p-discrete-option-multi-choice')
+      ?.querySelector('.h5p-question-introduction')
+      ?.classList.toggle('display-none', state);
   }
 
   /**
