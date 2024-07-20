@@ -25,7 +25,7 @@ export default class Panel {
       onGotFocus: () => {}
     }, callbacks);
 
-    const optionUUID = H5P.createUUID();
+    const optionUUID = `option-${H5P.createUUID()}`;
 
     /*
      * Implementing 'Disclosure' pattern (amended for disabled buttons)

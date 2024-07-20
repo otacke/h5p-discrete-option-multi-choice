@@ -20,7 +20,7 @@ export default class PanelList {
 
     // Set uuid for each option
     this.params.options = this.params.options.map((option) => {
-      option.uuid = H5P.createUUID();
+      option.uuid = `panel-${H5P.createUUID()}`;
       return option;
     });
 
