@@ -1,6 +1,6 @@
 {
   "name": "h5p-discrete-option-multi-choice",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Let students answer discrete option multiple choice questions",
   "private": true,
   "scripts": {
