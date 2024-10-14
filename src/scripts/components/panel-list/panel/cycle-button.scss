@@ -1,4 +1,4 @@
-@import "@styles/main";
+@use "@styles/main";
 
 .h5p-discrete-option-multi-choice-cycle-button {
   background-color: rgba(255,255,255,0.5);
@@ -26,20 +26,20 @@
   }
 
   &:disabled {
-    color: $color-disabled;
+    color: main.$color-disabled;
     &::before {
-      color: $color-disabled;
+      color: main.$color-disabled;
     }
   }
 
   &:not(:disabled) {
     &:hover {
-      background-color: $color-primary-5;
+      background-color: main.$color-primary-5;
       cursor: pointer;
     }
 
     &:active {
-      background-color: $color-primary-15;
+      background-color: main.$color-primary-15;
     }
   }
 }
