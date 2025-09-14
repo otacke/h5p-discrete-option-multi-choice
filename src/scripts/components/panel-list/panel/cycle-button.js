@@ -17,12 +17,12 @@ export default class CycleButton {
   constructor(params = {}, callbacks = {}) {
     this.params = Util.extend({
       selector: {},
-      confidenceIndex: 0
+      confidenceIndex: 0,
     }, params);
 
     this.callbacks = Util.extend({
       onClicked: () => {},
-      onGotFocus: () => {}
+      onGotFocus: () => {},
     }, callbacks);
 
     this.dom = document.createElement('button');
@@ -85,7 +85,7 @@ export default class CycleButton {
     this.dom.innerHTML = this.params.selector.options[this.selectedIndex].label;
     this.dom.setAttribute(
       'aria-label',
-      `Change confidence. Current value: ${this.params.selector.options[this.selectedIndex].value}`
+      `Change confidence. Current value: ${this.params.selector.options[this.selectedIndex].value}`,
     );
   }
 

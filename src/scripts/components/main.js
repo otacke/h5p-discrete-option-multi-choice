@@ -2,6 +2,15 @@ import Util from '@services/util.js';
 import PanelList from '@components/panel-list/panel-list.js';
 import { VIEW_STATES } from '@scripts/h5p-discrete-option-multi-choice';
 
+/** @constant {number} DISTRACTION_CHANCE Chance of distraction. */
+const DISTRACTION_CHANCE = 0.5;
+
+/** @constant {number} JUMPING_PREVENTION_TIMEOUT_MS Timeout to prevent jumping. */
+const JUMPING_PREVENTION_TIMEOUT_MS = 10;
+
+/** @constant {number} OFFSET_FACTOR Factor for offset calculations. */
+const OFFSET_FACTOR = 2;
+
 /**
  * Main DOM component incl. main controller.
  */
@@ -19,7 +28,7 @@ export default class Main {
 
     this.callbacks = Util.extend({
       onAnswered: () => {},
-      onGameOver: () => {}
+      onGameOver: () => {},
     }, callbacks);
 
     this.dom = document.createElement('div');
@@ -127,7 +136,7 @@ export default class Main {
       }
 
       // Randomly add one more option on correct answer to distract
-      if (scoreDelta === 1 && Math.random() < 0.5) {
+      if (scoreDelta === 1 && Math.random() < DISTRACTION_CHANCE) {
         this.callbacks.onGameOver({ quiet: params.quiet }); // Done
         return;
       }
@@ -145,7 +154,7 @@ export default class Main {
     if (!params.quiet) {
       const message = Util.stripHTML(
         this.params.dictionary.get('a11y.panelAdded')
-          .replace(/@option/, this.answerOptions[this.currentPanelIndex].text)
+          .replace(/@option/, this.answerOptions[this.currentPanelIndex].text),
       );
 
       this.params.globals.get('read')(message);
@@ -155,7 +164,7 @@ export default class Main {
     if (params.focus) {
       window.setTimeout(() => {
         this.panelList.focus(this.currentPanelIndex, true);
-      }, 10); // Prevent jumping before iframe resize and let screenreader read
+      }, JUMPING_PREVENTION_TIMEOUT_MS); // Prevent jumping before iframe resize and let screenreader read
     }
   }
 
@@ -168,7 +177,7 @@ export default class Main {
 
     this.scorePoints = this.scorePoints || new H5P.Question.ScorePoints();
     this.panelList.showResults(
-      params.showScores ? this.scorePoints : null
+      params.showScores ? this.scorePoints : null,
     );
   }
 
@@ -177,7 +186,7 @@ export default class Main {
    */
   showFeedback() {
     this.panelList.showFeedback(
-      { selected: this.answerOptions.map((option) => option.userAnswer) }
+      { selected: this.answerOptions.map((option) => option.userAnswer) },
     );
   }
 
@@ -206,10 +215,10 @@ export default class Main {
   appendResultsMessage() {
     this.resultsMessage = document.createElement('p');
     this.resultsMessage.classList.add(
-      'h5p-discrete-option-multi-choice-message'
+      'h5p-discrete-option-multi-choice-message',
     );
     this.resultsMessage.innerText = this.params.dictionary.get(
-      'l10n.yourResults'
+      'l10n.yourResults',
     );
 
     this.dom.append(this.resultsMessage);
@@ -262,7 +271,7 @@ export default class Main {
    */
   reset(params = {}) {
     params = Util.extend({
-      previousState: {}
+      previousState: {},
     }, params);
 
     this.dom.innerHTML = '';
@@ -296,7 +305,7 @@ export default class Main {
       for (let i = 0; i < values.length; i++) {
         selector.options.push({
           value: values[i],
-          label: labels?.[i] ?? values[i]
+          label: labels?.[i] ?? values[i],
         });
       }
     }
@@ -321,7 +330,7 @@ export default class Main {
       {
         dictionary: this.params.dictionary,
         globals: this.params.globals,
-        options: this.answerOptions
+        options: this.answerOptions,
       },
       {
         onAnswered: (index, userAnswer) => {
@@ -329,13 +338,13 @@ export default class Main {
             index: index,
             userAnswer: userAnswer,
             quiet: false,
-            focus: true
+            focus: true,
           });
         },
         onConfidenceChanged: (index, confidenceIndex) => {
           this.handleConfidenceChanged(index, confidenceIndex);
-        }
-      }
+        },
+      },
     );
 
     this.panelList.reset({ previousState: params.previousState.answers });
@@ -367,10 +376,10 @@ export default class Main {
       answers: this.answerOptions.map((option) => {
         return ({
           userAnswer: option.userAnswer,
-          confidenceIndex: option.confidenceIndex
+          confidenceIndex: option.confidenceIndex,
         });
       }),
-      isOvertime: this.isOvertime
+      isOvertime: this.isOvertime,
     };
   }
 
@@ -404,11 +413,11 @@ export default class Main {
     return this.getScoredAnswerOptions()
       .map((option, index) => {
         if ((option.userAnswer === true)) {
-          return 2 * index;
+          return OFFSET_FACTOR * index;
         }
 
         if ((option.userAnswer === false)) {
-          return 2 * index + 1;
+          return OFFSET_FACTOR * index + 1;
         }
 
         return null;
@@ -426,17 +435,17 @@ export default class Main {
       .reduce((choices, choice, index) => {
         choices.push(
           {
-            id: (index * 2).toString(),
+            id: (index * OFFSET_FACTOR).toString(),
             description: {
-              'en-US': `${Util.stripHTML(choice.text)} (@correct)`
-            }
+              'en-US': `${Util.stripHTML(choice.text)} (@correct)`,
+            },
           },
           {
-            id: (index * 2 + 1).toString(),
+            id: (index * OFFSET_FACTOR + 1).toString(),
             description: {
-              'en-US': `${Util.stripHTML(choice.text)} (@incorrect)`
-            }
-          }
+              'en-US': `${Util.stripHTML(choice.text)} (@incorrect)`,
+            },
+          },
         );
 
         return choices;
@@ -452,15 +461,15 @@ export default class Main {
       this.getScoredAnswerOptions()
         .reduce((correct, option, index) => {
           if (option.correct) {
-            correct.push((2 * index).toString());
+            correct.push((OFFSET_FACTOR * index).toString());
           }
           else {
-            correct.push((2 * index + 1).toString());
+            correct.push((OFFSET_FACTOR * index + 1).toString());
           }
 
           return correct;
         }, [])
-        .join('[,]')
+        .join('[,]'),
     ];
   }
 }

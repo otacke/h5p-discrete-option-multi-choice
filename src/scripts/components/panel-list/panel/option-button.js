@@ -17,7 +17,7 @@ export default class OptionButton {
 
     this.callbacks = Util.extend({
       onClicked: () => {},
-      onGotFocus: () => {}
+      onGotFocus: () => {},
     }, callbacks);
 
     this.dom = document.createElement('button');
@@ -28,8 +28,8 @@ export default class OptionButton {
       this.params.dictionary
         .get('a11y.markAnswerAs')
         .replace(
-          /@status/, this.params.dictionary.get('a11y.' + this.params.type)
-        )
+          /@status/, this.params.dictionary.get(`a11y.${  this.params.type}`),
+        ),
     );
     this.dom.setAttribute('disabled', 'disabled');
 

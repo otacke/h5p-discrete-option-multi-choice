@@ -31,7 +31,7 @@ export default class Option {
     this.callbacks = Util.extend({
       onAnswered: () => {},
       onConfidenceChanged: () => {},
-      onGotFocus: () => {}
+      onGotFocus: () => {},
     }, callbacks);
 
     this.isDisabled = true;
@@ -75,7 +75,7 @@ export default class Option {
     // Actions
     this.actions = document.createElement('div');
     this.actions.classList.add(
-      'h5p-discrete-option-multi-choice-option-actions'
+      'h5p-discrete-option-multi-choice-option-actions',
     );
     this.actions.setAttribute('id', this.params.uuid);
     this.dom.append(this.actions);
@@ -85,7 +85,7 @@ export default class Option {
       this.confidenceSelector = new CycleButton(
         {
           selector: this.params.selector,
-          confidenceIndex: this.params.confidenceIndex
+          confidenceIndex: this.params.confidenceIndex,
         },
         {
           onClicked: (confidenceIndex) => {
@@ -94,8 +94,8 @@ export default class Option {
           onGotFocus: () => {
             this.currentFocusElement = this.confidenceSelector;
             this.callbacks.onGotFocus();
-          }
-        }
+          },
+        },
       );
       this.actions.append(this.confidenceSelector.getDOM());
       this.focusElements.push(this.confidenceSelector);
@@ -109,7 +109,7 @@ export default class Option {
     this.choiceCorrect = new OptionButton(
       {
         dictionary: this.params.dictionary,
-        type: 'correct'
+        type: 'correct',
       },
       {
         onClicked: () => {
@@ -121,8 +121,8 @@ export default class Option {
         onGotFocus: () => {
           this.currentFocusElement = this.choiceCorrect;
           this.callbacks.onGotFocus();
-        }
-      }
+        },
+      },
     );
     choices.append(this.choiceCorrect.getDOM());
     this.focusElements.push(this.choiceCorrect);
@@ -130,7 +130,7 @@ export default class Option {
     this.choiceIncorrect = new OptionButton(
       {
         dictionary: this.params.dictionary,
-        type: 'incorrect'
+        type: 'incorrect',
       },
       {
         onClicked: () => {
@@ -142,8 +142,8 @@ export default class Option {
         onGotFocus: () => {
           this.currentFocusElement = this.choiceIncorrect;
           this.callbacks.onGotFocus();
-        }
-      }
+        },
+      },
     );
     choices.append(this.choiceIncorrect.getDOM());
     this.focusElements.push(this.choiceIncorrect);
@@ -160,7 +160,7 @@ export default class Option {
         labelSegments.push(
           this.params.dictionary
             .get('a11y.youMarkedThisAs')
-            .replace(/@correctness/, this.params.dictionary.get('a11y.correct'))
+            .replace(/@correctness/, this.params.dictionary.get('a11y.correct')),
         );
       }
       else if (this.selected === this.choiceIncorrect) {
@@ -168,15 +168,15 @@ export default class Option {
           this.params.dictionary
             .get('a11y.youMarkedThisAs')
             .replace(
-              /@correctness/, this.params.dictionary.get('a11y.incorrect')
-            )
+              /@correctness/, this.params.dictionary.get('a11y.incorrect'),
+            ),
         );
       }
 
       if (this.confidenceSelector) {
         labelSegments.push(
           this.params.dictionary.get('a11y.confidenceAt')
-            .replace(/@value/, this.confidenceSelector.getCurrentValue())
+            .replace(/@value/, this.confidenceSelector.getCurrentValue()),
         );
       }
 
@@ -187,7 +187,7 @@ export default class Option {
 
         labelSegments.push(
           this.params.dictionary.get('a11y.yourAnswerWas')
-            .replace(/@correctness/, correctness)
+            .replace(/@correctness/, correctness),
         );
       }
 
@@ -201,19 +201,19 @@ export default class Option {
 
         labelSegments.push(
           this.params.dictionary.get('a11y.correctAnswerWas')
-            .replace(/@correctness/, correctness)
+            .replace(/@correctness/, correctness),
         );
       }
     }
     else {
       if (this.confidenceSelector) {
         labelSegments.push(
-          this.params.dictionary.get('a11y.taskConfidenceMark')
+          this.params.dictionary.get('a11y.taskConfidenceMark'),
         );
       }
       else {
         labelSegments.push(
-          this.params.dictionary.get('a11y.taskMark')
+          this.params.dictionary.get('a11y.taskMark'),
         );
       }
     }
@@ -325,7 +325,7 @@ export default class Option {
 
     if (this.confidenceSelector) {
       this.confidenceSelector.select(
-        params?.previousState?.confidenceIndex ?? 0
+        params?.previousState?.confidenceIndex ?? 0,
       );
     }
 

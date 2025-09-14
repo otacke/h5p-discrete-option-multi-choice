@@ -15,7 +15,7 @@ export default class PanelList {
    */
   constructor(params = {}, callbacks = {}) {
     this.params = Util.extend({
-      options: []
+      options: [],
     }, params);
 
     // Set uuid for each option
@@ -26,7 +26,7 @@ export default class PanelList {
 
     this.callbacks = Util.extend({
       onAnswered: () => {},
-      onConfidenceChanged: () => {}
+      onConfidenceChanged: () => {},
     }, callbacks);
 
     this.attachedPanels = [];
@@ -41,7 +41,7 @@ export default class PanelList {
       return new Panel(
         {
           dictionary: this.params.dictionary,
-          options: option
+          options: option,
         },
         {
           onAnswered: (score) => {
@@ -52,8 +52,8 @@ export default class PanelList {
           },
           onGotFocus: () => {
             this.handlePanelGotFocus(index);
-          }
-        }
+          },
+        },
       );
     });
 
@@ -97,7 +97,7 @@ export default class PanelList {
       // Mark selected answer option correctness
       panel.markAnswer(
         wasAnswerCorrect,
-        scorePoints?.getElement(wasAnswerCorrect)
+        scorePoints?.getElement(wasAnswerCorrect),
       );
     });
   }
@@ -327,7 +327,7 @@ export default class PanelList {
    */
   reset(params = {}) {
     params = Util.extend({
-      previousState: []
+      previousState: [],
     }, params);
 
     this.panels.forEach((panel, index) => {

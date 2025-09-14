@@ -6,6 +6,9 @@ import XAPI from '@mixins/xapi.js';
 import Main from '@components/main.js';
 import '@styles/h5p-discrete-option-multi-choice.scss';
 
+/** @constant {number} FOCUS_TIMEOUT_MS Timeout for focus events. */
+const FOCUS_TIMEOUT_MS = 50;
+
 export default class DiscreteOptionMultiChoice extends H5P.Question {
   /**
    * @class
@@ -29,7 +32,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         showResults: false,
         randomAnswers: true,
         singlePoint: false,
-        confidenceLevels: '100,50,0'
+        confidenceLevels: '100,50,0',
       },
       answers: [],
       l10n: {
@@ -38,7 +41,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         showSolution: 'Show solution',
         retry: 'Retry',
         confidence: 'I am @percent sure.',
-        yourResults: 'Your results'
+        yourResults: 'Your results',
       },
       a11y: {
         check: 'Check the answers. The responses will be marked as correct, incorrect, or unanswered.',
@@ -56,8 +59,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         youMarkedThisAs: 'You marked this as @correctness',
         confidenceAt: 'Confidence: @value',
         yourAnswerWas: 'Your answer was @correctness',
-        correctAnswerWas: 'The correct answer was to mark this as @correctness'
-      }
+        correctAnswerWas: 'The correct answer was to mark this as @correctness',
+      },
     }, params);
 
     // Ensure values match what discrete option multiple choice is for
@@ -92,7 +95,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.content = new Main(
       {
         dictionary: this.dictionary,
-        globals: this.globals
+        globals: this.globals,
       },
       {
         onAnswerGiven: (scoreDelta, skipXAPI) => {
@@ -100,8 +103,8 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         },
         onGameOver: (params) => {
           this.handleGameOver(params);
-        }
-      }
+        },
+      },
     );
   }
 
@@ -121,7 +124,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
             alt: media.params.alt,
             title: media.params.title,
             expandImage: media.params.expandImage,
-            minimizeImage: media.params.minimizeImage
+            minimizeImage: media.params.minimizeImage,
           });
         }
       }
@@ -155,14 +158,14 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
     if (
       this.previousState.viewState ===
-      VIEW_STATES['results'] &&
-      this.viewState !== VIEW_STATES['results']
+      VIEW_STATES.results &&
+      this.viewState !== VIEW_STATES.results
     ) {
       this.handleGameOver({ skipXAPI: true });
     }
     else if (
       this.previousState.viewState ===
-      VIEW_STATES['solutions']
+      VIEW_STATES.solutions
     ) {
       this.handleGameOver({ skipXAPI: true });
       this.handleShowSolutions();
@@ -182,7 +185,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
         }
       }, {
         root: document.documentElement,
-        threshold: 0
+        threshold: 0,
       });
       this.observer.observe(contentDOM);
     });
@@ -202,7 +205,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       {
         contentData: this.contentData,
         textIfSubmitting: this.dictionary.get('l10n.submit'),
-      }
+      },
     );
 
     this.addButton(
@@ -213,7 +216,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       },
       false,
       { 'aria-label': this.dictionary.get('a11y.showSolution') },
-      {}
+      {},
     );
 
     this.addButton(
@@ -224,7 +227,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       },
       false,
       { 'aria-label': this.dictionary.get('a11y.retry') },
-      {}
+      {},
     );
   }
 
@@ -312,7 +315,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.trigger('resize');
 
     const textScore = H5P.Question.determineOverallFeedback(
-      this.params.overallFeedback, this.getScore() / this.getMaxScore()
+      this.params.overallFeedback, this.getScore() / this.getMaxScore(),
     );
 
     // H5P.Question expects ':num' and ':total'
@@ -324,14 +327,14 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
       textScore,
       this.getScore(),
       this.getMaxScore(),
-      ariaMessage
+      ariaMessage,
     );
 
     this.content.showFeedback();
 
     window.setTimeout(() => {
       this.content.focusPanel(0);
-    }, 50); // Give time to read results
+    }, FOCUS_TIMEOUT_MS); // Give time to read results
 
     if (!params.skipXAPI) {
       this.triggerXAPIEvent('answered');
@@ -350,7 +353,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
 
     this.content.reset({
       previousState: params.previousState ?? {},
-      focus: params.focus ?? false
+      focus: params.focus ?? false,
     });
 
     this.removeFeedback();

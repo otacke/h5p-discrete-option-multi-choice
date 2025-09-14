@@ -85,7 +85,7 @@ export default class QuestionTypeContract {
     return {
       content: this.content.getCurrentState(),
       currentAnswerIndex: this.currentAnswerIndex,
-      viewState: this.viewState
+      viewState: this.viewState,
     };
   }
 }

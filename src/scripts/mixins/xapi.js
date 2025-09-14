@@ -23,7 +23,7 @@ export default class XAPI {
 
     Util.extend(
       xAPIEvent.getVerifiedStatementValue(['object', 'definition']),
-      this.getXAPIDefinition()
+      this.getXAPIDefinition(),
     );
 
     if (verb === 'completed' || verb === 'answered') {
@@ -32,7 +32,7 @@ export default class XAPI {
         this.getMaxScore(),
         this,
         true,
-        this.getScore() === this.getMaxScore()
+        this.getScore() === this.getMaxScore(),
       );
 
       xAPIEvent.data.statement.result.response = this.content.getXAPIResponse();
@@ -87,7 +87,7 @@ export default class XAPI {
     }
 
     definition.correctResponsesPattern =
-       this.content.getXAPICorrectResponsesPattern();
+      this.content.getXAPICorrectResponsesPattern();
 
     return definition;
   }
@@ -99,7 +99,7 @@ export default class XAPI {
   getTitle() {
     return H5P.createTitle(
       this.extras?.metadata?.title ||
-      XAPI.DEFAULT_DESCRIPTION
+      XAPI.DEFAULT_DESCRIPTION,
     );
   }
 

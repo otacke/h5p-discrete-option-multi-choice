@@ -14,7 +14,7 @@ export default class Feedback {
   constructor(params = {}) {
     this.params = Util.extend({
       chosenFeedback: '',
-      notChosenFeedback: ''
+      notChosenFeedback: '',
     }, params);
 
     this.dom = document.createElement('div');

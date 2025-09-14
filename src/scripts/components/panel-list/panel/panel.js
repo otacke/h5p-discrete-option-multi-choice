@@ -22,7 +22,7 @@ export default class Panel {
     this.callbacks = Util.extend({
       onAnswered: () => {},
       onConfidenceChanged: () => {},
-      onGotFocus: () => {}
+      onGotFocus: () => {},
     }, callbacks);
 
     const optionUUID = `option-${H5P.createUUID()}`;
@@ -60,7 +60,7 @@ export default class Panel {
           Object.keys(params.options.selector || {}).length &&
           { selector: params.options.selector }
         ),
-        confidenceIndex: params.options.confidenceIndex
+        confidenceIndex: params.options.confidenceIndex,
       },
       {
         onAnswered: (score) => {
@@ -71,14 +71,14 @@ export default class Panel {
         },
         onGotFocus: () => {
           this.callbacks.onGotFocus();
-        }
-      }
+        },
+      },
     );
     question.append(this.option.getDOM());
 
     this.feedback = new Feedback({
       chosenFeedback: params.options.hintAndFeedback.chosenFeedback,
-      notChosenFeedback: params.options.hintAndFeedback.notChosenFeedback
+      notChosenFeedback: params.options.hintAndFeedback.notChosenFeedback,
     });
     this.dom.append(this.feedback.getDOM());
   }
@@ -207,7 +207,7 @@ export default class Panel {
    */
   reset(params = {}) {
     params = Util.extend({
-      previousState: {}
+      previousState: {},
     }, params);
 
     this.hideFeedback();
@@ -226,7 +226,7 @@ export default class Panel {
     if (event.code === 'Space' || event.key === 'Enter') {
       if (this.isDisabled) {
         this.params.globals.get('read')(
-          this.params.dictionary.get('a11y.panelNotExpandable')
+          this.params.dictionary.get('a11y.panelNotExpandable'),
         );
         return;
       }
