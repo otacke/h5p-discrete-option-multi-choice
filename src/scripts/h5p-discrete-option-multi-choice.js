@@ -1,6 +1,5 @@
 import Util from '@services/util.js';
 import Dictionary from '@services/dictionary.js';
-import Globals from '@services/globals.js';
 import QuestionTypeContract from '@mixins/question-type-contract.js';
 import XAPI from '@mixins/xapi.js';
 import Main from '@components/main.js';
@@ -77,7 +76,7 @@ export default class DiscreteOptionMultiChoice extends H5P.Question {
     this.dictionary.fill({ l10n: this.params.l10n, a11y: this.params.a11y });
 
     // Set globals
-    this.globals = new Globals();
+    this.globals = new Map();
     this.globals.set('params', this.params);
     this.globals.set('resize', () => {
       this.trigger('resize');
